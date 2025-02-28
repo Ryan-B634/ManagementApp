@@ -1,3 +1,5 @@
+#Added Login Page, Signup page and Partially the homepage its not the best but it works for now
+
 import tkinter as tk
 from tkinter import messagebox
 
