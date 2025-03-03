@@ -88,10 +88,7 @@ class Login(tk.Frame):
         tk.Button(self, text="Login", fg="Black", bg="white", font=("Ebrima", 24),
                   command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
     def toggle_password(self):
         """ Toggle password visibility """
         if self.LoginPassword.cget('show') == "*":
@@ -138,18 +135,10 @@ class SignUp(tk.Frame):
         # Sign-up button
 <<<<<<< HEAD
         tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Times", 24),
+        tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24),
                   command=self.addUser).place(x=885, y=900)
 
 
-=======
-        tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24),
-                  command=lambda: validate_signup(
-                      self.SignUpEmail.get(),
-                      self.SignUpPassword.get(),
-                      self.SignUpConfirmPassword.get(),
-                      controller)).place(x=885, y=900)
-
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
     def toggle_password(self):
         """ Toggle password visibility for Sign Up """
         if self.SignUpPassword.cget('show') == "*":
@@ -234,55 +223,25 @@ class SignUp(tk.Frame):
 
 
 
-<<<<<<< HEAD
 
 
 
 class Homepage(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
-=======
-# Update validate_signup to correctly handle the entries
-def validate_signup(email, password, confirm_password, controller):
-    if not email or not password or not confirm_password:
-        messagebox.showerror("Sign Up Failed", "All fields are required.")
-        return
-    elif password != confirm_password and len(password) < 8:
-        messagebox.showerror("Sign Up Failed", "Passwords do not match.")
-        return
-    else:
-        messagebox.showinfo("Sign Up Successful", "Account created successfully!")  # Shows success message
-        controller.show_frame(Homepage)  # Navigate to Homepage
-
-class Homepage(tk.Frame):
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
         self.controller = controller
         self.config(bg='Lightblue')
 
         self.projects = []  # List to store project buttons
         self.filtered_projects = self.projects
 
-<<<<<<< HEAD
-        self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
-
-        self.TaskButton.place(x=270, y=150)
-=======
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
         tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
 
         # Search bar label and input field
         self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Ebrima", 18))
         self.search_label.place(x=1500, y=10)
 
-<<<<<<< HEAD
-
-
-
-=======
         self.search_entry = tk.Entry(self, width=30, font=("Ebrima", 18))
         self.search_entry.place(x=1400, y=50)
 
@@ -323,7 +282,6 @@ class Homepage(tk.Frame):
 
         self.projects = []  # List to store project buttons
 
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
     def popup1(self):
         # Creates a popup window for entering a new project name
         popup_window = tk.Toplevel(self.master)
@@ -381,10 +339,6 @@ class Project(tk.Frame):
         self.master = master
         self.controller = controller
         self.config(bg='Lightblue')
-<<<<<<< HEAD
-        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720, y=0)
-
-=======
 
         # Project Label
         tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720, y=0)
@@ -471,7 +425,6 @@ class Project(tk.Frame):
         # Update the progress bar value
         self.progress_bar["value"] = progress_percentage
 
->>>>>>> 6dfb73588f511f830a36c20084e93bbe626aa8a0
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
