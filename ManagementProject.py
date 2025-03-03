@@ -199,11 +199,7 @@ class Homepage(tk.Frame):
 
 
 <<<<<<< Updated upstream
-        # Quit button
-        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
 
-    def closing(self):
-        exit()
 =======
     def popup1(self):
         # Creates a popup window for entering a new project name
