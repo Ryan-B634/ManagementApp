@@ -290,7 +290,7 @@ class Homepage(tk.Frame):
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
         if project_name:
 
-            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"))
+            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=controller.show_frame(Project))
 
             max_y = 700
             x_offset = 270
@@ -348,7 +348,7 @@ class Project(tk.Frame):
         # Creates a popup window for entering a new task name
         popup_window = tk.Toplevel()
         popup_window.title("Create New Task")
-        popup_window.geometry("400x300")
+        popup_window.geometry("400x400")
         popup_window.configure(bg='lightblue')
 
         tk.Label(popup_window, text="Enter Task Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
@@ -361,13 +361,20 @@ class Project(tk.Frame):
         create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window))
         create_task_button.pack(pady=20)
 
+        tk.Label(popup_window, text="Enter Task Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+
+        delete_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        delete_name_entry.pack(pady=5)
+
+        delete_task_button = tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_task(delete_name_entry.get(), popup_window))
+        delete_task_button.pack(pady=20)
+
     def create_new_task(self, task_name, popup_window):
         if task_name:
-            # Create a new checkbox for the task
             task_var = tk.BooleanVar()  # A variable to track the checkbox state
 
             task_checkbox = tk.Checkbutton(self, text=task_name, var=task_var, font=("Ebrima", 18), bg="lightblue", command=lambda: self.update_progress(task_var))
-           
+
             # Resused method from homepage since it works.
             max_y = 500
             x_offset = 270
@@ -398,6 +405,25 @@ class Project(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a task name.")
 
+    def delete_task(self, task_name, popup_window):
+        if task_name:
+            task_found = False
+            for task_checkbox, task_var in self.tasks:
+                if task_checkbox.cget('text') == task_name:
+                    task_checkbox.destroy()  # Remove the task from the UI
+                    self.tasks.remove((task_checkbox, task_var))  # Remove it from the task list
+                    task_found = True
+                    break  # Exit the loop after finding the task
+
+            if task_found:
+                messagebox.showinfo("Success", f"Task '{task_name}' deleted successfully!")
+            else:
+                messagebox.showwarning("Not Found", f"Task '{task_name}' not found.")
+            popup_window.destroy()
+        else:
+            # In case the user didn't enter anything
+            messagebox.showwarning("No Name", "You must provide a task name to delete.")
+
     def update_progress(self, task_var):
         # This updates the progress bar as tasks are completed
         if task_var.get():
@@ -411,9 +437,6 @@ class Project(tk.Frame):
 
         # Update the progress bar value
         self.progress_bar["value"] = progress_percentage
-
-        self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
-        self.TaskButton.place(x=270, y=150)
 
 
 
