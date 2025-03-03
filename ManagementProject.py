@@ -172,7 +172,7 @@ class Homepage(tk.Frame):
         self.controller = controller
         self.config(bg='Lightblue')
 
-        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
+        tk.Label(self, text="Project Vision", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
         tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
 
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"), command=self.popup1)
