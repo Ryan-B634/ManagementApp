@@ -6,8 +6,9 @@
 
 import tkinter as tk
 from tkinter import messagebox
-import pymongo
-from pymongo import MongoClient
+import pymongo  # Database
+from pymongo import MongoClient # Database
+import re   # Regular Expression to validate email
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 
