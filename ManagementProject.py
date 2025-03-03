@@ -417,11 +417,6 @@ class Project(tk.Frame):
         self.TaskButton.place(x=270, y=150)
 
 
-        # Quit button
-        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
-
-    def closing(self):
-        exit()
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
