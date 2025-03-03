@@ -63,9 +63,8 @@ def validate_login(email_entry, password_entry, controller):
 
 # Login Page
 class Login(tk.Frame):
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
 
         # Labels and buttons
@@ -105,9 +104,8 @@ class Login(tk.Frame):
 
 # SignUp Page
 class SignUp(tk.Frame):
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
 
         # Sign-up labels and buttons
@@ -220,7 +218,7 @@ class Homepage(tk.Frame):
 
     def popup1(self):
         # Creates a popup window for entering a new project name
-        popup_window = tk.Toplevel(self.master)
+        popup_window = tk.Toplevel()
         popup_window.title("Create New Project")
         popup_window.geometry("400x300")
         popup_window.configure(bg='lightblue')
@@ -232,7 +230,11 @@ class Homepage(tk.Frame):
         Popup_Enter.pack(pady=5)
 
         # Button to create the project when clicked
+<<<<<<< Updated upstream
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
+=======
+        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
+>>>>>>> Stashed changes
         self.CreateProject.pack(pady=20)
 
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
@@ -269,11 +271,17 @@ class Homepage(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name.")
 
+<<<<<<< Updated upstream
 class Project(tk.Frame): 
     def __init__(self, parent, controller, master=None, *args, **kwargs):
         tk.Frame.__init__(self, parent, master, *args, **kwargs)
         self.master = master
         self.controller = controller
+=======
+class Project(tk.Frame):
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+>>>>>>> Stashed changes
         self.config(bg='Lightblue')
 
         # Project Label
