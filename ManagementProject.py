@@ -1,16 +1,10 @@
-# Version 0.5
-# To Do:
-# Backend
-# Task System
-# Rest of Pages
-
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import pymongo  # Database
-from pymongo import MongoClient # Database
+from pymongo import MongoClient  # Database
 import re   # Regular Expression to validate email
-import tkcalendar # For task and project deadlines
+import tkcalendar  # For task and project deadlines
 from tkcalendar import Calendar
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
@@ -21,7 +15,7 @@ class Navigating(tk.Tk):
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)        
+        container.grid_columnconfigure(0, weight=1)
         self.wm_title("Management Application")
 
         self.frames = {}
@@ -31,7 +25,7 @@ class Navigating(tk.Tk):
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        # Show the Login frame
+        # Show the Login frame (change as needed)
         self.show_frame(Project)
 
     def show_frame(self, page_name):
@@ -57,10 +51,7 @@ def validate_login(email_entry, password_entry, controller):
         # Clear the login fields after successful login
         email_entry.delete(0, tk.END)
         password_entry.delete(0, tk.END)
-        
         controller.show_frame(Homepage)
-
-
 
 # Login Page
 class Login(tk.Frame):
@@ -68,37 +59,30 @@ class Login(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
 
-        # Labels and buttons
-        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=590,y=0)
+        tk.Label(self, text="Management Application", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=590, y=0)
         tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=900, y=100)
-        tk.Button(self, text="Sign up", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18), height=-4,command=lambda: controller.show_frame(SignUp)).place(x=920, y=700)
+        tk.Button(self, text="Sign up", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18), height=-4, command=lambda: controller.show_frame(SignUp)).place(x=920, y=700)
 
         tk.Label(self, text="Enter Email:", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=610, y=285)
-        self.LoginEmail = tk.Entry(self, width=45,font=("Ebrima", 13, "bold"))  # Store the Entry widget as an instance variable
+        self.LoginEmail = tk.Entry(self, width=45, font=("Ebrima", 13, "bold"))
         self.LoginEmail.place(x=800, y=300)
 
         tk.Label(self, text="Enter Password:", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=547, y=485)
-        self.LoginPassword = tk.Entry(self, font=("Ebrima", 13, "bold"),width=45, show="*")  # Store the Entry widget as an instance variable
+        self.LoginPassword = tk.Entry(self, font=("Ebrima", 13, "bold"), width=45, show="*")
         self.LoginPassword.place(x=800, y=500)
 
-        # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="👁", fg="Black", bg="lightblue",border=0, font=("Ebrima", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="👁", fg="Black", bg="lightblue", border=0, font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=487)
 
-        # Login button that calls the validate_login function
-        tk.Button(self, text="Login", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18),height=-4, command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=935, y=600)
-
+        tk.Button(self, text="Login", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18), height=-4, command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=935, y=600)
 
     def toggle_password(self):
-        """ Toggle password visibility """
         if self.LoginPassword.cget('show') == "*":
-            self.LoginPassword.config(show="")  # Show the password
-            self.show_password_button.config(text="Hide")  # Change button text to "Hide"
+            self.LoginPassword.config(show="")
+            self.show_password_button.config(text="Hide")
         else:
-            self.LoginPassword.config(show="*")  # Hide the password
-            self.show_password_button.config(text="Show")  # Change button text to "Show"
-
-
+            self.LoginPassword.config(show="*")
+            self.show_password_button.config(text="Show")
 
 # SignUp Page
 class SignUp(tk.Frame):
@@ -107,120 +91,93 @@ class SignUp(tk.Frame):
         self.config(bg='Lightblue')
         self.controller = controller
 
-        # Sign-up labels and buttons
         tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=830, y=0)
         tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
 
-        # Sign-up fields
         tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
         self.SignUpEmail = tk.Entry(self, width=45)
         self.SignUpEmail.place(x=800, y=300)
 
         tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=830, y=400)
-        self.SignUpPassword = tk.Entry(self, width=45, show="*")  # Hide the password initially
+        self.SignUpPassword = tk.Entry(self, width=45, show="*")
         self.SignUpPassword.place(x=800, y=500)
 
-        # Hide/Show Password button
         self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
         tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=800, y=600)
-        self.SignUpConfirmPassword = tk.Entry(self, width=45, show="*")  # Hide the confirm password initially
+        self.SignUpConfirmPassword = tk.Entry(self, width=45, show="*")
         self.SignUpConfirmPassword.place(x=800, y=700)
 
-        # Hide/Show Confirm Password button
         self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_confirm_password)
         self.show_confirm_password_button.place(x=1250, y=700)
 
-        # Sign-up button
-        tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24),
-                  command=self.addUser).place(x=885, y=900)
+        tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24), command=self.addUser).place(x=885, y=900)
 
-        
     def toggle_password(self):
-        """ Toggle password visibility for Sign Up """
         if self.SignUpPassword.cget('show') == "*":
-            self.SignUpPassword.config(show="")  # Show the password
-            self.show_password_button.config(text="Hide")  # Change button text to "Hide"
+            self.SignUpPassword.config(show="")
+            self.show_password_button.config(text="Hide")
         else:
-            self.SignUpPassword.config(show="*")  # Hide the password
-            self.show_password_button.config(text="Show")  # Change button text to "Show"
+            self.SignUpPassword.config(show="*")
+            self.show_password_button.config(text="Show")
 
     def toggle_confirm_password(self):
-        """ Toggle confirm password visibility for Sign Up """
         if self.SignUpConfirmPassword.cget('show') == "*":
-            self.SignUpConfirmPassword.config(show="")  # Show the confirm password
-            self.show_confirm_password_button.config(text="Hide")  # Change button text to "Hide"
+            self.SignUpConfirmPassword.config(show="")
+            self.show_confirm_password_button.config(text="Hide")
         else:
-            self.SignUpConfirmPassword.config(show="*")  # Hide the confirm password
-            self.show_confirm_password_button.config(text="Show")  # Change button text to "Show"
+            self.SignUpConfirmPassword.config(show="*")
+            self.show_confirm_password_button.config(text="Show")
 
-        
     def addUser(self):
         client = MongoClient("mongodb://localhost:27017")
         mydb = client["Users"]
         mycol = mydb["UserInfo"]
-            
 
         self.User = self.SignUpEmail.get()
         self.Pwd = self.SignUpPassword.get()
         self.ConfPwd = self.SignUpConfirmPassword.get()
-        
+
         EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-
-
         Exist = mycol.find_one({"Email": self.User})
-
         specialchar = re.compile("[$&+,:;=?@#|'<>.-^*()%!]")
-
         def contains_special_characters(string):
             return bool(specialchar.search(string))
-
         if Exist is None:
-
             if EmailRE.match(self.User):
-
                 if self.Pwd == self.ConfPwd:
-
                     if len(self.Pwd) >= 8:
-
                         if contains_special_characters(self.Pwd):
-
-
                             NewUser = [{"Email": self.User, "Password": self.Pwd}]
                             mycol.insert_many(NewUser)
-                            messagebox.showinfo("Success","User Registered Successfully.")
+                            messagebox.showinfo("Success", "User Registered Successfully.")
                             self.AcceptClear()
                             self.controller.show_frame(Login)
                         else:
-                            messagebox.showerror("Error","Password Must Contain At Least one Special Character")
+                            messagebox.showerror("Error", "Password Must Contain At Least one Special Character")
                             self.clear()
-
                     else:
-                        messagebox.showerror("Error","Password Must Be At Least 8 Characters")
+                        messagebox.showerror("Error", "Password Must Be At Least 8 Characters")
                         self.clear()
                 else:
-                    messagebox.showerror("Error","Passwords Do Not Match")
+                    messagebox.showerror("Error", "Passwords Do Not Match")
                     self.clear()
             else:
-                messagebox.showerror("Error","Please Enter A Valid Email")
+                messagebox.showerror("Error", "Please Enter A Valid Email")
                 self.clear()
         else:
-            messagebox.showerror("Error","Email Is Already In Use")
+            messagebox.showerror("Error", "Email Is Already In Use")
             self.clear()
 
-
-
     def AcceptClear(self):
-        self.SignUpEmail.delete(0, tk.END)  
-        self.SignUpPassword.delete(0, tk.END)  
-        self.SignUpConfirmPassword.delete(0, tk.END) 
+        self.SignUpEmail.delete(0, tk.END)
+        self.SignUpPassword.delete(0, tk.END)
+        self.SignUpConfirmPassword.delete(0, tk.END)
 
     def clear(self):
         self.SignUpConfirmPassword.delete(0, tk.END)
-        self.SignUpPassword.delete(0,tk.END)
-
-
+        self.SignUpPassword.delete(0, tk.END)
 
 class Homepage(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
@@ -231,204 +188,193 @@ class Homepage(tk.Frame):
         self.projects = []  
         self.filtered_projects = []
 
-        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0,column=2,padx=750)
-        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).grid(row=0,column=1)
+        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0, column=2, padx=750)
+        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).grid(row=0, column=1)
 
         self.filtered_projects = self.projects
 
-        # Search bar label and input field
         self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Ebrima", 18))
         self.search_label.place(x=1500, y=10)
 
         self.search_entry = tk.Entry(self, width=30, font=("Ebrima", 18))
         self.search_entry.place(x=1400, y=50)
 
-        # Search button
         self.search_button = tk.Button(self, text="Search", fg="black", bg="DeepskyBlue1", font=("Ebrima", 12), command=self.filter_projects)
         self.search_button.place(x=1750, y=50)
 
-        # Display the projects in a listbox (Isn't linked up with anything yet)
-        self.project_listbox = tk.Listbox(self, width=41, height=5, font=("Ebrima", 14)) 
-        self.project_listbox.place(x=1400, y=90)  # Position the list box just below the search bar
+        self.project_listbox = tk.Listbox(self, width=41, height=5, font=("Ebrima", 14))
+        self.project_listbox.place(x=1400, y=90)
         self.update_project_listbox()
 
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup1)
-        self.createProjectButton.grid(row=1,column=2, padx=20, pady=20)
+        self.createProjectButton.grid(row=1, column=2, padx=20, pady=20)
 
     def filter_projects(self):
-        # Get the text from the search bar
         search_query = self.search_entry.get().lower()
-
-        # Filter projects based on search query
         self.filtered_projects = [project for project in self.projects if search_query in project.lower()]
-
-        # Update the project listbox with filtered results
         self.update_project_listbox()
 
     def update_project_listbox(self):
-        # Clear the current listbox content
         self.project_listbox.delete(0, tk.END)
-
-        # Insert the filtered projects into the listbox
         for project in self.filtered_projects:
             self.project_listbox.insert(tk.END, project)
 
     def popup1(self):
-        # Creates a popup window for entering a new project name
         popup_window = tk.Toplevel()
         popup_window.title("Project Management")
         popup_window.geometry("400x400")
         popup_window.configure(bg='lightblue')
 
         tk.Label(popup_window, text="Enter Project Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
-
-        # Entry widget for project name input
         Popup_Enter = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
         Popup_Enter.pack(pady=5)
 
-        # Button to create the project when clicked
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
-
         self.CreateProject.pack(pady=20)
 
         tk.Label(popup_window, text="Enter project Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
-
         delete_project_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
         delete_project_entry.pack(pady=5)
 
         delete_project_button = tk.Button(popup_window, text="Delete project", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_project(delete_project_entry.get(), popup_window))
         delete_project_button.pack(pady=20)
 
-    def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
+    def create_new_project(self, project_name, popup_window):
         if project_name:
-
-            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=lambda:self.controller.show_frame(Project))
-
+            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=lambda: self.controller.show_frame(Project))
             max_y = 700
             x_offset = 270
             y_offset = 250
             button_spacing_y = 100
             button_spacing_x = 270
-
-            # Calculates the y-position
             y_position = y_offset + len(self.projects) * button_spacing_y
-
-            # Checks if the y-position exceeds y=700, then move to the right
             if y_position > max_y:
-                row = (len(self.projects) // (max_y // button_spacing_y))  # Determine which row it should be in
+                row = (len(self.projects) // (max_y // button_spacing_y))
                 x_position = x_offset + (row * button_spacing_x)
                 y_position = y_offset + ((len(self.projects) % (max_y // button_spacing_y)) * button_spacing_y)
             else:
                 x_position = x_offset
                 y_position = y_offset + len(self.projects) * button_spacing_y
-
             new_project_button.place(x=x_position, y=y_position)
-
-            self.projects.append((new_project_button, project_name))  # Adds to the list of projects
-
+            self.projects.append((new_project_button, project_name))
             popup_window.destroy()
-
             messagebox.showinfo("Success", f"Project '{project_name}' created successfully!")
         else:
-            # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name.")
 
     def delete_project(self, project_name, popup_window):
         if project_name:
             project_found = False
             for new_project_button, stored_project_name in self.projects:
-                if stored_project_name == project_name:  # Compare the stored project name
-                    new_project_button.destroy()  # Remove the project from the UI
-                    self.projects.remove((new_project_button, stored_project_name))  # Remove it from the project list
+                if stored_project_name == project_name:
+                    new_project_button.destroy()
+                    self.projects.remove((new_project_button, stored_project_name))
                     project_found = True
-                    break  # Exit the loop after finding the project
-
+                    break
             if project_found:
                 messagebox.showinfo("Success", f"Project '{project_name}' deleted successfully!")
             else:
                 messagebox.showwarning("Not Found", f"Project '{project_name}' not found.")
             popup_window.destroy()
         else:
-            # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name to delete.")
 
-
-class Project(tk.Frame): 
-    def __init__(self, parent, controller,*args, **kwargs):
+class Project(tk.Frame):
+    def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.controller = controller
         self.config(bg='Lightblue')
+        # Initialize MongoDB for tasks
+        self.client = MongoClient("mongodb://localhost:27017")
+        self.db = self.client["TaskDatabase"]
+        self.tasks_collection = self.db["Tasks"]
 
-        # Project Label
-        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0,column=2, padx=650)
-
-        # Progress Bar
+        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0, column=2, padx=650)
         self.progress_label = tk.Label(self, text="Progress:", fg="black", bg="lightblue", font=("Ebrima", 18))
         self.progress_label.place(x=625, y=87)
-        
         self.progress_bar = ttk.Progressbar(self, length=300, mode="determinate", maximum=100)
         self.progress_bar.place(x=750, y=100)
-
-        # Task creation area
         self.create_task_button = tk.Button(self, text="Create New Task", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup_task)
-        self.create_task_button.grid(row=2,column=2,pady=50)
-
-        self.tasks = []  # List to store task checkboxes
-        self.completed_tasks = 0  # Counter for completed tasks
-
-        self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 10, "bold"), command=lambda:controller.show_frame(Homepage)).grid(row=0,column=1)
+        self.create_task_button.grid(row=2, column=2, pady=50)
+        self.tasks = []
+        self.completed_tasks = 0
+        self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 10, "bold"), command=lambda: controller.show_frame(Homepage))
+        self.homeButton.grid(row=0, column=1)
 
     def popup_task(self):
-        # Creates a popup window for entering a new task name
         popup_window = tk.Toplevel()
-        popup_window.title("Task Management")
-        popup_window.geometry("400x600")
+        popup_window.title("Create A Task")
+        popup_window.geometry("400x750")
         popup_window.configure(bg='lightblue')
 
-        tk.Label(popup_window, text="Enter Task Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+        tk.Label(popup_window, text="Task Title:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        task_title_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        task_title_entry.pack(pady=5)
 
-        # Entry widget for task name input
-        task_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
-        task_name_entry.pack(pady=5)
+        tk.Label(popup_window, text="Task Description:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        task_description_text = tk.Text(popup_window, width=30, height=4, font=("Ebrima", 12))
+        task_description_text.pack(pady=5)
 
-        tk.Label(popup_window, text="Task Deadline:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+        tk.Label(popup_window, text="Assign Task to Team Member:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        team_members = ["Alice", "Bob", "Charlie", "David"]
+        assignee_combobox = ttk.Combobox(popup_window, values=team_members, font=("Ebrima", 12))
+        assignee_combobox.pack(pady=5)
 
-        DatePicker = Calendar(popup_window, selectmode = 'day', year = 2025, month = 3, day = 1)
-        DatePicker.pack(pady=10)
+        tk.Label(popup_window, text="Assign Task to Project:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        project_names = [proj[1] for proj in self.controller.frames[Homepage].projects]
+        project_combobox = ttk.Combobox(popup_window, values=project_names, font=("Ebrima", 12))
+        project_combobox.pack(pady=5)
 
-        # Button to create the task when clicked
-        create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window, DatePicker.get_date()))
-        create_task_button.pack(pady=20)
+        tk.Label(popup_window, text="Task Start Date:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        start_date_calendar = Calendar(popup_window, selectmode='day', year=2025, month=3, day=1)
+        start_date_calendar.pack(pady=5)
 
-        tk.Label(popup_window, text="Enter Task Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+        tk.Label(popup_window, text="Task End Date:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        end_date_calendar = Calendar(popup_window, selectmode='day', year=2025, month=3, day=1)
+        end_date_calendar.pack(pady=5)
 
-        delete_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
-        delete_name_entry.pack(pady=5)
+        tk.Label(popup_window, text="Task Priority Level:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        priority_combobox = ttk.Combobox(popup_window, values=["Low", "Medium", "High"], font=("Ebrima", 12))
+        priority_combobox.pack(pady=5)
 
-        delete_task_button = tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_task(delete_name_entry.get(), popup_window, DatePicker.get_date()))
-        delete_task_button.pack(pady=20)
+        tk.Label(popup_window, text="Completion Status:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        status_combobox = ttk.Combobox(popup_window, values=["In-Progress", "Completed"], font=("Ebrima", 12))
+        status_combobox.pack(pady=5)
 
-    def create_new_task(self, task_name, popup_window, DatePicker):
-        if task_name:
-            task_var = tk.BooleanVar()  # A variable to track the checkbox state
+        tk.Button(popup_window, text="Assign Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12),
+                  command=lambda: self.create_new_task(
+                      task_title_entry.get(),
+                      task_description_text.get("1.0", tk.END).strip(),
+                      assignee_combobox.get(),
+                      project_combobox.get(),
+                      start_date_calendar.get_date(),
+                      end_date_calendar.get_date(),
+                      priority_combobox.get(),
+                      status_combobox.get(),
+                      popup_window
+                  )).pack(pady=10)
 
-            task_checkbox = tk.Checkbutton(self, text=task_name, var=task_var, font=("Ebrima", 18), bg="lightblue", command=lambda: self.update_progress(task_var))
+        tk.Label(popup_window, text="Enter Task Title to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=5)
+        delete_title_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        delete_title_entry.pack(pady=5)
+        tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12),
+                  command=lambda: self.delete_task(delete_title_entry.get(), popup_window)).pack(pady=10)
 
-            task_deadline = tk.Label(self, text=DatePicker, font=("Ebrima", 18), bg="lightblue")
+    def create_new_task(self, title, description, assignee, project, start_date, end_date, priority, status, popup_window):
+        if title:
+            task_var = tk.BooleanVar()
+            task_checkbox = tk.Checkbutton(self, text=title, variable=task_var, font=("Ebrima", 18), bg="lightblue", command=lambda: self.update_progress(task_var))
+            task_dates = tk.Label(self, text=f"{start_date} to {end_date}", font=("Ebrima", 14), bg="lightblue")
 
-            # Resused method from homepage since it works.
             max_y = 500
             x_offset = 270
             y_offset = 250
             button_spacing_y = 100
             button_spacing_x = 350
 
-            # Calculates the y-position
             y_position = y_offset + len(self.tasks) * button_spacing_y
-
-            # Checks if the y-position exceeds y=500, then move to the right
             if y_position > max_y:
-                row = (len(self.tasks) // (max_y // button_spacing_y))  # Determine which row it should be in
+                row = (len(self.tasks) // (max_y // button_spacing_y))
                 x_position = x_offset + (row * button_spacing_x)
                 y_position = y_offset + ((len(self.tasks) % (max_y // button_spacing_y)) * button_spacing_y)
             else:
@@ -439,50 +385,53 @@ class Project(tk.Frame):
             text_position_x = x_position + 100
 
             task_checkbox.place(x=x_position, y=y_position)
+            task_dates.place(x=text_position_x, y=text_position_y)
 
-            task_deadline.place(x=text_position_x, y=text_position_y)
+            self.tasks.append((task_checkbox, task_var, task_dates))
 
-            self.tasks.append((task_checkbox, task_var, task_deadline))
+            task_data = {
+                "title": title,
+                "description": description,
+                "assignee": assignee,
+                "project": project,
+                "start_date": start_date,
+                "end_date": end_date,
+                "priority": priority,
+                "status": status
+            }
+            self.tasks_collection.insert_one(task_data)
 
             popup_window.destroy()
-
-            messagebox.showinfo("Success", f"Task '{task_name}' created successfully!")
+            messagebox.showinfo("Success", f"Task '{title}' created successfully!")
         else:
-            # In case the user didn't enter anything
-            messagebox.showwarning("No Name", "You must provide a task name.")
+            messagebox.showwarning("No Title", "You must provide a task title.")
 
-    def delete_task(self, task_name, popup_window, task_deadline):
-        if task_name:
+    def delete_task(self, title, popup_window):
+        if title:
             task_found = False
-            for task_checkbox, task_var, task_deadline in self.tasks:
-                if task_checkbox.cget('text') == task_name:
-                    task_checkbox.destroy()  # Remove the task from the UI
-                    task_deadline.destroy()
-                    self.tasks.remove((task_checkbox, task_var, task_deadline))  # Remove it from the task list
+            for task_checkbox, task_var, task_dates in self.tasks:
+                if task_checkbox.cget('text') == title:
+                    task_checkbox.destroy()
+                    task_dates.destroy()
+                    self.tasks.remove((task_checkbox, task_var, task_dates))
                     task_found = True
-                    break  # Exit the loop after finding the task
-
+                    self.tasks_collection.delete_one({"title": title})
+                    break
             if task_found:
-                messagebox.showinfo("Success", f"Task '{task_name}' deleted successfully!")
+                messagebox.showinfo("Success", f"Task '{title}' deleted successfully!")
             else:
-                messagebox.showwarning("Not Found", f"Task '{task_name}' not found.")
+                messagebox.showwarning("Not Found", f"Task '{title}' not found.")
             popup_window.destroy()
         else:
-            # In case the user didn't enter anything
-            messagebox.showwarning("No Name", "You must provide a task name to delete.")
+            messagebox.showwarning("No Title", "You must provide a task title to delete.")
 
     def update_progress(self, task_var):
-        # This updates the progress bar as tasks are completed
         if task_var.get():
             self.completed_tasks += 1
         else:
             self.completed_tasks -= 1
-
-        # Calculate progress percentage
         total_tasks = len(self.tasks)
         progress_percentage = (self.completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
-
-        # Update the progress bar value
         self.progress_bar["value"] = progress_percentage
 
 # ---------------------------- IMPORTANT AREA -------------------------------
