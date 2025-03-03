@@ -156,8 +156,73 @@ class SignUp(tk.Frame):
             self.SignUpConfirmPassword.config(show="*")  # Hide the confirm password
             self.show_confirm_password_button.config(text="Show")  # Change button text to "Show"
 
-    def closing(self):
-        exit()
+    def addUser(self):
+        client = MongoClient("mongodb://localhost:27017")
+        mydb = client["Users"]
+        mycol = mydb["UserInfo"]
+            
+        cipher = self.controller.cipher
+
+        user = self.LoginBox.get()
+        Pwd = self.Pwd.get()
+        ConfPwd = self.ConfPass.get()
+        FName = self.FirstName.get()
+        LName=self.LastName.get()
+        EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+
+        Exist = mycol.find_one({"Email": user})
+
+        specialchar = re.compile("[$&+,:;=?@#|'<>.-^*()%!]")
+
+        def contains_special_characters(string):
+            return bool(specialchar.search(string))
+
+        if Exist is None:
+
+            if EmailRE.match(user):
+
+                if Pwd == ConfPwd:
+
+                    if len(Pwd) >= 8:
+
+                        if contains_special_characters(Pwd):
+
+                            encrypted_password = cipher.encrypt(Pwd.encode())
+
+                            NewUser = [{"First Name":FName,"Last Name":LName,"Email": user, "Password": encrypted_password}]
+                            mycol.insert_many(NewUser)
+                            messagebox.showinfo("Success","User Registered Successfully.")
+                            self.AcceptClear()
+                        else:
+                            messagebox.showerror("Error","Password Must Contain At Least one Special Character")
+                            self.clear()
+
+                    else:
+                        messagebox.showerror("Error","Password Must Be At Least 8 Characters")
+                        self.clear()
+                else:
+                    messagebox.showerror("Error","Passwords Do Not Match")
+                    self.clear()
+            else:
+                messagebox.showerror("Error","Please Enter A Valid Email")
+                self.clear()
+        else:
+            messagebox.showerror("Error","Email Is Already In Use")
+            self.clear()
+
+
+
+    def AcceptClear(self):
+        self.Pwd.delete(0, tk.END)
+        self.ConfPass.delete(0, tk.END)
+        self.FirstName.delete(0, tk.END)
+        self.LastName.delete(0, tk.END)
+        self.LoginBox.delete(0, tk.END)
+
+    def clear(self):
+        self.Pwd.delete(0, tk.END)
+        self.ConfPass.delete(0, tk.END)
 
 
 
@@ -230,15 +295,12 @@ class Homepage(tk.Frame):
         Popup_Enter.pack(pady=5)
 
         # Button to create the project when clicked
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
-=======
+
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
->>>>>>> Stashed changes
-=======
+
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
->>>>>>> Stashed changes
+
         self.CreateProject.pack(pady=20)
 
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
@@ -275,23 +337,11 @@ class Homepage(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name.")
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-class Project(tk.Frame): 
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
-        self.controller = controller
-=======
+
 class Project(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
->>>>>>> Stashed changes
-=======
-class Project(tk.Frame):
-    def __init__(self, parent, controller, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
->>>>>>> Stashed changes
+
         self.config(bg='Lightblue')
 
         # Project Label
