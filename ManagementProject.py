@@ -6,6 +6,7 @@
 
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import pymongo  # Database
 from pymongo import MongoClient # Database
 import re   # Regular Expression to validate email
@@ -23,7 +24,7 @@ class Navigating(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, SignUp, Homepage]:
+        for F in [Login, SignUp, Homepage, Project]:
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -65,20 +66,20 @@ class Login(tk.Frame):
         self.config(bg='Lightblue')
 
         # Labels and buttons
-        tk.Label(self, text = "Company Name",fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=720,y=0)
-        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=850, y=100)
-        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Times", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
+        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=600,y=0)
+        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=880, y=100)
+        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
 
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=850, y=200)
+        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
         self.LoginEmail = tk.Entry(self, width=45)  # Store the Entry widget as an instance variable
         self.LoginEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=825, y=400)
+        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=825, y=400)
         self.LoginPassword = tk.Entry(self, width=45, show="*")  # Store the Entry widget as an instance variable
         self.LoginPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
         # Login button that calls the validate_login function
@@ -97,7 +98,6 @@ class Login(tk.Frame):
     def closing(self):
         exit()
 
-
 # SignUp Page
 class SignUp(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
@@ -105,28 +105,28 @@ class SignUp(tk.Frame):
         self.config(bg='Lightblue')
 
         # Sign-up labels and buttons
-        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=830, y=0)
-        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Times", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
+        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=830, y=0)
+        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
 
         # Sign-up fields
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=850, y=200)
+        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
         self.SignUpEmail = tk.Entry(self, width=45)
         self.SignUpEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=830, y=400)
+        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=830, y=400)
         self.SignUpPassword = tk.Entry(self, width=45, show="*")  # Hide the password initially
         self.SignUpPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
-        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=800, y=600)
+        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=800, y=600)
         self.SignUpConfirmPassword = tk.Entry(self, width=45, show="*")  # Hide the confirm password initially
         self.SignUpConfirmPassword.place(x=800, y=700)
 
         # Hide/Show Confirm Password button
-        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_confirm_password)
+        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_confirm_password)
         self.show_confirm_password_button.place(x=1250, y=700)
 
         # Sign-up button
@@ -220,8 +220,6 @@ class SignUp(tk.Frame):
         self.Pwd.delete(0, tk.END)
         self.ConfPass.delete(0, tk.END)
 
-
-
 class Homepage(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -232,6 +230,9 @@ class Homepage(tk.Frame):
 
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
         tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
+
+        self.projects = []  # List to store project buttons
+        self.filtered_projects = self.projects
 
         # Search bar label and input field
         self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Ebrima", 18))
