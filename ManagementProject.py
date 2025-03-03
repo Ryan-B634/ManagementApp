@@ -472,7 +472,7 @@ class Project(tk.Frame):
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
-root.wm_title("SafeNest Banking")
+root.wm_title("Managemewnt System")
 root.state("zoomed")
 root.geometry("1920x1080")
 root.mainloop()
