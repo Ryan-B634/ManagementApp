@@ -133,8 +133,6 @@ class SignUp(tk.Frame):
         self.show_confirm_password_button.place(x=1250, y=700)
 
         # Sign-up button
-<<<<<<< HEAD
-        tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Times", 24),
         tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24),
                   command=self.addUser).place(x=885, y=900)
 
