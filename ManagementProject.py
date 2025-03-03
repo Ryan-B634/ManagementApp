@@ -62,9 +62,8 @@ def validate_login(email_entry, password_entry, controller):
 
 # Login Page
 class Login(tk.Frame):
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
 
         # Labels and buttons
@@ -106,9 +105,8 @@ class Login(tk.Frame):
 
 # SignUp Page
 class SignUp(tk.Frame):
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
 
         # Sign-up labels and buttons
@@ -183,9 +181,15 @@ def validate_signup(email, password, confirm_password, controller):
         controller.show_frame(Homepage)  # Navigate to Homepage
 
 class Homepage(tk.Frame):
+<<<<<<< Updated upstream
     def __init__(self, parent, controller, master=None, *args, **kwargs):
         tk.Frame.__init__(self, parent, master, *args, **kwargs)
         self.master = master
+=======
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.controller = controller
+>>>>>>> Stashed changes
         self.config(bg='Lightblue')
 
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
@@ -194,11 +198,71 @@ class Homepage(tk.Frame):
         self.TaskButton.place(x=270, y=150)
 
 
+<<<<<<< Updated upstream
         # Quit button
         tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
 
     def closing(self):
         exit()
+=======
+    def popup1(self):
+        # Creates a popup window for entering a new project name
+        popup_window = tk.Toplevel()
+        popup_window.title("Create New Project")
+        popup_window.geometry("400x300")
+        popup_window.configure(bg='lightblue')
+
+        tk.Label(popup_window, text="Enter Project Name:", bg='lightblue', fg='white', font=("Ebrima", 14)).pack(pady=10)
+
+        # Entry widget for project name input
+        Popup_Enter = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        Popup_Enter.pack(pady=5)
+
+        # Button to create the project when clicked
+        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
+        self.CreateProject.pack(pady=20)
+
+    def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
+        if project_name:
+
+            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"))
+
+            max_y = 900
+            x_offset = 270
+            y_offset = 250
+            button_spacing_y = 100
+            button_spacing_x = 270
+
+            # Calculates the y-position
+            y_position = y_offset + len(self.projects) * button_spacing_y
+
+            # Checks if the y-position exceeds y=900, then move to the right
+            if y_position > max_y:
+                row = (len(self.projects) // (max_y // button_spacing_y))  # Determine which row it should be in
+                x_position = x_offset + (row * button_spacing_x)
+                y_position = y_offset + ((len(self.projects) % (max_y // button_spacing_y)) * button_spacing_y)
+            else:
+                x_position = x_offset
+                y_position = y_offset + len(self.projects) * button_spacing_y
+
+            new_project_button.place(x=x_position, y=y_position)
+
+            self.projects.append(new_project_button)  # Adds to the list of projects
+
+            popup_window.destroy()
+
+            messagebox.showinfo("Success", f"Project '{project_name}' created successfully!")
+        else:
+            # In case the user didn't enter anything
+            messagebox.showwarning("No Name", "You must provide a project name.")
+
+class Project(tk.Frame):
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.config(bg='Lightblue')
+
+        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720, y=0)
+>>>>>>> Stashed changes
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
