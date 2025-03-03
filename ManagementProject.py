@@ -32,7 +32,7 @@ class Navigating(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         # Show the Login frame
-        self.show_frame(Project)
+        self.show_frame(Homepage)
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
@@ -435,8 +435,8 @@ class Project(tk.Frame):
                 x_position = x_offset
                 y_position = y_offset + len(self.tasks) * button_spacing_y
 
-            text_position_y = y_position + 4
-            text_position_x = x_position + 100
+            text_position_y = y_position + 50
+            text_position_x = x_position + 25
 
             task_checkbox.place(x=x_position, y=y_position)
 
