@@ -1,4 +1,4 @@
-# Version 0.2
+# Version 0.3
 # To Do:
 # Backend
 
@@ -201,7 +201,7 @@ class Homepage(tk.Frame):
         Popup_Enter.pack(pady=5)
 
         # Button to create the project when clicked
-        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window, self.master))
+        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
         self.CreateProject.pack(pady=20)
 
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
