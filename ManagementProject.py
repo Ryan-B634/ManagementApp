@@ -1,4 +1,4 @@
-# Version 0.2
+# Version 0.4
 # To Do:
 # Backend
 # Task System
@@ -85,8 +85,7 @@ class Login(tk.Frame):
         self.show_password_button.place(x=1250, y=500)
 
         # Login button that calls the validate_login function
-        tk.Button(self, text="Login", fg="Black", bg="white", font=("Times", 24),
-                  command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
+        tk.Button(self, text="Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
 
 
     def toggle_password(self):
@@ -274,13 +273,6 @@ class Homepage(tk.Frame):
         for project in self.filtered_projects:
             self.project_listbox.insert(tk.END, project)
 
-    def closing(self):
-        exit()
-        self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"), command=self.popup1)
-        self.createProjectButton.place(x=750, y=150)
-
-        self.projects = []  # List to store project buttons
-
     def popup1(self):
         # Creates a popup window for entering a new project name
         popup_window = tk.Toplevel()
@@ -297,10 +289,6 @@ class Homepage(tk.Frame):
         # Button to create the project when clicked
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
 
-        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
-
-        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
-
         self.CreateProject.pack(pady=20)
 
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
@@ -308,7 +296,7 @@ class Homepage(tk.Frame):
 
             new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"))
 
-            max_y = 900
+            max_y = 700
             x_offset = 270
             y_offset = 250
             button_spacing_y = 100
@@ -317,7 +305,7 @@ class Homepage(tk.Frame):
             # Calculates the y-position
             y_position = y_offset + len(self.projects) * button_spacing_y
 
-            # Checks if the y-position exceeds y=900, then move to the right
+            # Checks if the y-position exceeds y=700, then move to the right
             if y_position > max_y:
                 row = (len(self.projects) // (max_y // button_spacing_y))  # Determine which row it should be in
                 x_position = x_offset + (row * button_spacing_x)
@@ -337,11 +325,10 @@ class Homepage(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name.")
 
-
-class Project(tk.Frame):
-    def __init__(self, parent, controller, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
-
+class Project(tk.Frame): 
+    def __init__(self, parent, controller,*args, **kwargs):
+        tk.Frame.__init__(self, parent, master, *args, **kwargs)
+        self.controller = controller
         self.config(bg='Lightblue')
 
         # Project Label
