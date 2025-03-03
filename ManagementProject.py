@@ -69,7 +69,7 @@ class Login(tk.Frame):
         # Labels and buttons
         tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=590,y=0)
         tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=900, y=100)
-        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=840, y=700)
+        tk.Button(self, text="Sign up", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18), height=-4,command=lambda: controller.show_frame(SignUp)).place(x=920, y=700)
 
         tk.Label(self, text="Enter Email:", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=610, y=285)
         self.LoginEmail = tk.Entry(self, width=45,font=("Ebrima", 13, "bold"))  # Store the Entry widget as an instance variable
@@ -84,7 +84,7 @@ class Login(tk.Frame):
         self.show_password_button.place(x=1250, y=487)
 
         # Login button that calls the validate_login function
-        tk.Button(self, text="Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
+        tk.Button(self, text="Login", fg="Black", bg="DeepskyBlue1", font=("Ebrima", 18),height=-4, command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=935, y=600)
 
 
     def toggle_password(self):
