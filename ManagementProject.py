@@ -4,6 +4,7 @@
 
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import pymongo
 from pymongo import MongoClient
 
@@ -20,7 +21,7 @@ class Navigating(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, SignUp, Homepage]:
+        for F in [Login, SignUp, Homepage, Project]:
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -179,35 +180,30 @@ class Homepage(tk.Frame):
         self.controller = controller
         self.config(bg='Lightblue')
 
-        # Sample list of projects ( can be replaced  with actual data from a database when thats ready)
-        self.projects = ["Task 1"]
-        self.filtered_projects = self.projects  # Initially, all projects are shown
+        self.projects = []  # List to store project buttons
+        self.filtered_projects = self.projects
 
-        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
-        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
+        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
+        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
 
         # Search bar label and input field
-        self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Times", 18))
+        self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Ebrima", 18))
         self.search_label.place(x=1500, y=10)
 
-        self.search_entry = tk.Entry(self, width=30, font=("Times", 18))
+        self.search_entry = tk.Entry(self, width=30, font=("Ebrima", 18))
         self.search_entry.place(x=1400, y=50)
 
         # Search button
-        self.search_button = tk.Button(self, text="Search", fg="black", bg="white", font=("Times", 18), command=self.filter_projects)
+        self.search_button = tk.Button(self, text="Search", fg="black", bg="white", font=("Ebrima", 18), command=self.filter_projects)
         self.search_button.place(x=1750, y=50)
 
         # Display the projects in a listbox (Isn't linked up with anything yet)
-        self.project_listbox = tk.Listbox(self, width=25, height=5, font=("Times", 14)) 
+        self.project_listbox = tk.Listbox(self, width=25, height=5, font=("Ebrima", 14)) 
         self.project_listbox.place(x=1400, y=90)  # Position the list box just below the search bar
         self.update_project_listbox()
 
-        # Task Button (you can replace with actual functionality)
-        self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
-        self.TaskButton.place(x=270, y=150)
-
-        # Quit button
-        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
+        self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"), command=self.popup1)
+        self.createProjectButton.place(x=750, y=150)
 
     def filter_projects(self):
         # Get the text from the search bar
