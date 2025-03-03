@@ -67,21 +67,21 @@ class Login(tk.Frame):
         self.config(bg='Lightblue')
 
         # Labels and buttons
-        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720,y=0)
-        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=850, y=100)
-        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
+        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=590,y=0)
+        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=900, y=100)
+        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=840, y=700)
 
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
-        self.LoginEmail = tk.Entry(self, width=45)  # Store the Entry widget as an instance variable
+        tk.Label(self, text="Enter Email:", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=610, y=285)
+        self.LoginEmail = tk.Entry(self, width=45,font=("Ebrima", 13, "bold"))  # Store the Entry widget as an instance variable
         self.LoginEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=825, y=400)
-        self.LoginPassword = tk.Entry(self, width=45, show="*")  # Store the Entry widget as an instance variable
+        tk.Label(self, text="Enter Password:", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=547, y=485)
+        self.LoginPassword = tk.Entry(self, font=("Ebrima", 13, "bold"),width=45, show="*")  # Store the Entry widget as an instance variable
         self.LoginPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
-        self.show_password_button.place(x=1250, y=500)
+        self.show_password_button = tk.Button(self, text="👁", fg="Black", bg="lightblue",border=0, font=("Ebrima", 18), command=self.toggle_password)
+        self.show_password_button.place(x=1250, y=487)
 
         # Login button that calls the validate_login function
         tk.Button(self, text="Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
