@@ -1,4 +1,4 @@
-# Version 0.4
+# Version 0.5
 # To Do:
 # Backend
 # Task System
@@ -10,6 +10,8 @@ from tkinter import ttk
 import pymongo  # Database
 from pymongo import MongoClient # Database
 import re   # Regular Expression to validate email
+import tkcalendar # For task and project deadlines
+from tkcalendar import Calendar
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 
@@ -24,13 +26,13 @@ class Navigating(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, SignUp, Homepage,Project]:
+        for F in [Login, SignUp, Homepage, Project]:
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
         # Show the Login frame
-        self.show_frame(Login)
+        self.show_frame(Project)
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
@@ -358,7 +360,7 @@ class Project(tk.Frame):
         self.config(bg='Lightblue')
 
         # Project Label
-        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720, y=0)
+        tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0,column=2, padx=650)
 
         # Progress Bar
         self.progress_label = tk.Label(self, text="Progress:", fg="black", bg="lightblue", font=("Ebrima", 18))
@@ -369,18 +371,18 @@ class Project(tk.Frame):
 
         # Task creation area
         self.create_task_button = tk.Button(self, text="Create New Task", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup_task)
-        self.create_task_button.place(x=750, y=150)
+        self.create_task_button.grid(row=2,column=2,pady=50)
 
         self.tasks = []  # List to store task checkboxes
         self.completed_tasks = 0  # Counter for completed tasks
 
-        self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 10, "bold"), command=lambda:controller.show_frame(Homepage)).place(x=0,y=0)
+        self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 10, "bold"), command=lambda:controller.show_frame(Homepage)).grid(row=0,column=1)
 
     def popup_task(self):
         # Creates a popup window for entering a new task name
         popup_window = tk.Toplevel()
         popup_window.title("Task Management")
-        popup_window.geometry("400x400")
+        popup_window.geometry("400x600")
         popup_window.configure(bg='lightblue')
 
         tk.Label(popup_window, text="Enter Task Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
@@ -389,8 +391,13 @@ class Project(tk.Frame):
         task_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
         task_name_entry.pack(pady=5)
 
+        tk.Label(popup_window, text="Task Deadline:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+
+        DatePicker = Calendar(popup_window, selectmode = 'day', year = 2025, month = 3, day = 1)
+        DatePicker.pack(pady=10)
+
         # Button to create the task when clicked
-        create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window))
+        create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window, DatePicker.get_date()))
         create_task_button.pack(pady=20)
 
         tk.Label(popup_window, text="Enter Task Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
@@ -398,21 +405,23 @@ class Project(tk.Frame):
         delete_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
         delete_name_entry.pack(pady=5)
 
-        delete_task_button = tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_task(delete_name_entry.get(), popup_window))
+        delete_task_button = tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_task(delete_name_entry.get(), popup_window, DatePicker.get_date()))
         delete_task_button.pack(pady=20)
 
-    def create_new_task(self, task_name, popup_window):
+    def create_new_task(self, task_name, popup_window, DatePicker):
         if task_name:
             task_var = tk.BooleanVar()  # A variable to track the checkbox state
 
             task_checkbox = tk.Checkbutton(self, text=task_name, var=task_var, font=("Ebrima", 18), bg="lightblue", command=lambda: self.update_progress(task_var))
+
+            task_deadline = tk.Label(self, text=DatePicker, font=("Ebrima", 18), bg="lightblue")
 
             # Resused method from homepage since it works.
             max_y = 500
             x_offset = 270
             y_offset = 250
             button_spacing_y = 100
-            button_spacing_x = 270
+            button_spacing_x = 350
 
             # Calculates the y-position
             y_position = y_offset + len(self.tasks) * button_spacing_y
@@ -426,9 +435,14 @@ class Project(tk.Frame):
                 x_position = x_offset
                 y_position = y_offset + len(self.tasks) * button_spacing_y
 
+            text_position_y = y_position + 4
+            text_position_x = x_position + 100
+
             task_checkbox.place(x=x_position, y=y_position)
 
-            self.tasks.append((task_checkbox, task_var))
+            task_deadline.place(x=text_position_x, y=text_position_y)
+
+            self.tasks.append((task_checkbox, task_var, task_deadline))
 
             popup_window.destroy()
 
@@ -437,13 +451,14 @@ class Project(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a task name.")
 
-    def delete_task(self, task_name, popup_window):
+    def delete_task(self, task_name, popup_window, task_deadline):
         if task_name:
             task_found = False
-            for task_checkbox, task_var in self.tasks:
+            for task_checkbox, task_var, task_deadline in self.tasks:
                 if task_checkbox.cget('text') == task_name:
                     task_checkbox.destroy()  # Remove the task from the UI
-                    self.tasks.remove((task_checkbox, task_var))  # Remove it from the task list
+                    task_deadline.destroy()
+                    self.tasks.remove((task_checkbox, task_var, task_deadline))  # Remove it from the task list
                     task_found = True
                     break  # Exit the loop after finding the task
 
