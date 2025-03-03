@@ -1,13 +1,13 @@
-# Version 0.3
+# Version 0.2
 # To Do:
 # Backend
+# Task System
+# Rest of Pages
 
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk
 import pymongo
 from pymongo import MongoClient
-import re
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 
@@ -22,7 +22,7 @@ class Navigating(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, SignUp, Homepage, Project]:
+        for F in [Login, SignUp, Homepage]:
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -68,24 +68,24 @@ class Login(tk.Frame):
         self.config(bg='Lightblue')
 
         # Labels and buttons
-        tk.Label(self, text = "Company Name",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720,y=0)
-        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=850, y=100)
-        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
+        tk.Label(self, text = "Company Name",fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=720,y=0)
+        tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=850, y=100)
+        tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Times", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
 
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
+        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=850, y=200)
         self.LoginEmail = tk.Entry(self, width=45)  # Store the Entry widget as an instance variable
         self.LoginEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=825, y=400)
+        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=825, y=400)
         self.LoginPassword = tk.Entry(self, width=45, show="*")  # Store the Entry widget as an instance variable
         self.LoginPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
         # Login button that calls the validate_login function
-        tk.Button(self, text="Login", fg="Black", bg="white", font=("Ebrima", 24),
+        tk.Button(self, text="Login", fg="Black", bg="white", font=("Times", 24),
                   command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
 
 
@@ -98,6 +98,8 @@ class Login(tk.Frame):
             self.LoginPassword.config(show="*")  # Hide the password
             self.show_password_button.config(text="Show")  # Change button text to "Show"
 
+    def closing(self):
+        exit()
 
 
 # SignUp Page
@@ -108,28 +110,28 @@ class SignUp(tk.Frame):
         self.config(bg='Lightblue')
 
         # Sign-up labels and buttons
-        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=830, y=0)
-        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
+        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=830, y=0)
+        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Times", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
 
         # Sign-up fields
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
+        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=850, y=200)
         self.SignUpEmail = tk.Entry(self, width=45)
         self.SignUpEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=830, y=400)
+        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=830, y=400)
         self.SignUpPassword = tk.Entry(self, width=45, show="*")  # Hide the password initially
         self.SignUpPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
-        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=800, y=600)
+        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=800, y=600)
         self.SignUpConfirmPassword = tk.Entry(self, width=45, show="*")  # Hide the confirm password initially
         self.SignUpConfirmPassword.place(x=800, y=700)
 
         # Hide/Show Confirm Password button
-        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_confirm_password)
+        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_confirm_password)
         self.show_confirm_password_button.place(x=1250, y=700)
 
         # Sign-up button
@@ -155,72 +157,8 @@ class SignUp(tk.Frame):
             self.SignUpConfirmPassword.config(show="*")  # Hide the confirm password
             self.show_confirm_password_button.config(text="Show")  # Change button text to "Show"
 
-    def addUser(self):
-        client = MongoClient("mongodb://localhost:27017")
-        mydb = client["Users"]
-        mycol = mydb["UserInfo"]
-            
-
-        user = self.SignUpEmail.get()
-        Pwd = self.SignUpPassword.get()
-        ConfPwd = self.SignUpConfirmPassword.get()
-
-        EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-
-
-        Exist = mycol.find_one({"Email": user})
-
-        specialchar = re.compile("[$&+,:;=?@#|'<>.-^*()%!]")
-
-        def contains_special_characters(string):
-            return bool(specialchar.search(string))
-
-        if Exist is None:
-
-            if EmailRE.match(user):
-
-                if Pwd == ConfPwd:
-
-                    if len(Pwd) >= 8:
-
-                        if contains_special_characters(Pwd):
-
-
-                            NewUser = [{"Email": user, "Password": Pwd}]
-                            mycol.insert_many(NewUser)
-                            messagebox.showinfo("Success","User Registered Successfully.")
-                            self.AcceptClear()
-                        else:
-                            messagebox.showerror("Error","Password Must Contain At Least one Special Character")
-                            self.clear()
-
-                    else:
-                        messagebox.showerror("Error","Password Must Be At Least 8 Characters")
-                        self.clear()
-                else:
-                    messagebox.showerror("Error","Passwords Do Not Match")
-                    self.clear()
-            else:
-                messagebox.showerror("Error","Please Enter A Valid Email")
-                self.clear()
-        else:
-            messagebox.showerror("Error","Email Is Already In Use")
-            self.clear()
-
-
-    
-    def AcceptClear(self):
-        self.SignUpPassword.delete(0, tk.END)
-        self.SignUpConfirmPassword.delete(0, tk.END)
-        self.SignUpEmail.delete(0, tk.END)
-
-    def clear(self):
-        self.SignUpPassword.delete(0, tk.END)
-        self.SignUpConfirmPassword.delete(0, tk.END)
-        
-
-
-
+    def closing(self):
+        exit()
 
 
 
@@ -230,8 +168,7 @@ class Homepage(tk.Frame):
         self.controller = controller
         self.config(bg='Lightblue')
 
-        self.projects = []  # List to store project buttons
-        self.filtered_projects = self.projects
+        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
 
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
         tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
@@ -423,10 +360,19 @@ class Project(tk.Frame):
         # Update the progress bar value
         self.progress_bar["value"] = progress_percentage
 
+        self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
+        self.TaskButton.place(x=270, y=150)
+
+
+        # Quit button
+        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
+
+    def closing(self):
+        exit()
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
-root.wm_title("Management Application")
+root.wm_title("SafeNest Banking")
 root.state("zoomed")
 root.geometry("1920x1080")
 root.mainloop()
