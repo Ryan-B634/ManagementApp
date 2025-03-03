@@ -38,7 +38,6 @@ class Navigating(tk.Tk):
 
 #---------------------------- IMPORTANT CLASS END ----------------------------
 
-# Validating the login details
 def validate_login(email_entry, password_entry, controller):
     username = email_entry.get()
     password = password_entry.get()
@@ -47,14 +46,18 @@ def validate_login(email_entry, password_entry, controller):
     mydb = client["Users"]
     mycol = mydb["UserInfo"]
 
-    
     user = mycol.find_one({"Email": username, "Password": password})
 
     if user is None:
         print("Invalid username or password.")
         messagebox.showerror("Login Failed", "Invalid username or password.")
     else:
+        # Clear the login fields after successful login
+        email_entry.delete(0, tk.END)
+        password_entry.delete(0, tk.END)
+        
         controller.show_frame(Homepage)
+
 
 
 # Login Page
