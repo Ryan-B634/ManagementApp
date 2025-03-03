@@ -47,14 +47,14 @@ def validate_login(email_entry, password_entry, controller):
     mydb = client["Users"]
     mycol = mydb["UserInfo"]
 
-    CheckUser=mycol.find_one({"Email":username})
-    CheckPass=mycol.find_one({"Password":password})
+    
+    user = mycol.find_one({"Email": username, "Password": password})
 
-    if Checkuser is None:
+    if user is None:
+        print("Invalid username or password.")
         messagebox.showerror("Login Failed", "Invalid username or password.")
     else:
-        if CheckPass == password:
-            self.controller.show_frame(Login)
+        controller.show_frame(Homepage)
 
 
 # Login Page
