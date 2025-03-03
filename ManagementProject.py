@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 import pymongo
 from pymongo import MongoClient
+import re
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 
@@ -87,8 +88,6 @@ class Login(tk.Frame):
         tk.Button(self, text="Login", fg="Black", bg="white", font=("Times", 24),
                   command=lambda: validate_login(self.LoginEmail, self.LoginPassword, controller)).place(x=895, y=600)
 
-        # Quit button
-        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
 
     def toggle_password(self):
         """ Toggle password visibility """
@@ -99,8 +98,6 @@ class Login(tk.Frame):
             self.LoginPassword.config(show="*")  # Hide the password
             self.show_password_button.config(text="Show")  # Change button text to "Show"
 
-    def closing(self):
-        exit()
 
 
 # SignUp Page
@@ -136,14 +133,8 @@ class SignUp(tk.Frame):
 
         # Sign-up button
         tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Times", 24),
-                  command=lambda: validate_signup(
-                      self.SignUpEmail.get(),
-                      self.SignUpPassword.get(),
-                      self.SignUpConfirmPassword.get(),
-                      controller)).place(x=885, y=900)
+                  command=self.addUser).place(x=885, y=900)
 
-        # Quit button
-        tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
 
     def toggle_password(self):
         """ Toggle password visibility for Sign Up """
@@ -163,44 +154,91 @@ class SignUp(tk.Frame):
             self.SignUpConfirmPassword.config(show="*")  # Hide the confirm password
             self.show_confirm_password_button.config(text="Show")  # Change button text to "Show"
 
-    def closing(self):
-        exit()
+    def addUser(self):
+        client = MongoClient("mongodb://localhost:27017")
+        mydb = client["Users"]
+        mycol = mydb["UserInfo"]
+            
+
+        user = self.SignUpEmail.get()
+        Pwd = self.SignUpPassword.get()
+        ConfPwd = self.SignUpConfirmPassword.get()
+
+        EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+
+        Exist = mycol.find_one({"Email": user})
+
+        specialchar = re.compile("[$&+,:;=?@#|'<>.-^*()%!]")
+
+        def contains_special_characters(string):
+            return bool(specialchar.search(string))
+
+        if Exist is None:
+
+            if EmailRE.match(user):
+
+                if Pwd == ConfPwd:
+
+                    if len(Pwd) >= 8:
+
+                        if contains_special_characters(Pwd):
+
+
+                            NewUser = [{"Email": user, "Password": Pwd}]
+                            mycol.insert_many(NewUser)
+                            messagebox.showinfo("Success","User Registered Successfully.")
+                            self.AcceptClear()
+                        else:
+                            messagebox.showerror("Error","Password Must Contain At Least one Special Character")
+                            self.clear()
+
+                    else:
+                        messagebox.showerror("Error","Password Must Be At Least 8 Characters")
+                        self.clear()
+                else:
+                    messagebox.showerror("Error","Passwords Do Not Match")
+                    self.clear()
+            else:
+                messagebox.showerror("Error","Please Enter A Valid Email")
+                self.clear()
+        else:
+            messagebox.showerror("Error","Email Is Already In Use")
+            self.clear()
+
+
+    
+    def AcceptClear(self):
+        self.SignUpPassword.delete(0, tk.END)
+        self.SignUpConfirmPassword.delete(0, tk.END)
+        self.SignUpEmail.delete(0, tk.END)
+
+    def clear(self):
+        self.SignUpPassword.delete(0, tk.END)
+        self.SignUpConfirmPassword.delete(0, tk.END)
+        
 
 
 
-# Update validate_signup to correctly handle the entries
-def validate_signup(email, password, confirm_password, controller):
-    if not email or not password or not confirm_password:
-        messagebox.showerror("Sign Up Failed", "All fields are required.")
-        return
-    elif password != confirm_password and len(password) < 8:
-        messagebox.showerror("Sign Up Failed", "Passwords do not match.")
-        return
-    else:
-        messagebox.showinfo("Sign Up Successful", "Account created successfully!")  # Shows success message
-        controller.show_frame(Homepage)  # Navigate to Homepage
+
+
 
 class Homepage(tk.Frame):
-<<<<<<< Updated upstream
-    def __init__(self, parent, controller, master=None, *args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
-        self.master = master
-=======
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.controller = controller
->>>>>>> Stashed changes
         self.config(bg='Lightblue')
 
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
 
         self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
+
         self.TaskButton.place(x=270, y=150)
 
 
-<<<<<<< Updated upstream
 
-=======
+
+
     def popup1(self):
         # Creates a popup window for entering a new project name
         popup_window = tk.Toplevel()
@@ -256,9 +294,8 @@ class Project(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
-
         tk.Label(self, text="Project Area", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720, y=0)
->>>>>>> Stashed changes
+
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
