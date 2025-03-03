@@ -64,7 +64,7 @@ class Login(tk.Frame):
         self.config(bg='Lightblue')
 
         # Labels and buttons
-        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=720,y=0)
+        tk.Label(self, text = "Management Application",fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=720,y=0)
         tk.Label(self, text="Login", fg="Black", bg="lightblue", font=("Ebrima", 32, "bold")).place(x=850, y=100)
         tk.Button(self, text="Sign up", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(SignUp)).place(x=885, y=700)
 
@@ -77,7 +77,7 @@ class Login(tk.Frame):
         self.LoginPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
         # Login button that calls the validate_login function
@@ -102,28 +102,28 @@ class SignUp(tk.Frame):
         self.config(bg='Lightblue')
 
         # Sign-up labels and buttons
-        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Times", 48, "bold")).place(x=830, y=0)
-        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Times", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
+        tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=830, y=0)
+        tk.Button(self, text="Back To Login", fg="Black", bg="white", font=("Ebrima", 24), command=lambda: controller.show_frame(Login)).place(x=1550, y=0)
 
         # Sign-up fields
-        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=850, y=200)
+        tk.Label(self, text="Enter Email", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=850, y=200)
         self.SignUpEmail = tk.Entry(self, width=45)
         self.SignUpEmail.place(x=800, y=300)
 
-        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=830, y=400)
+        tk.Label(self, text="Enter Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=830, y=400)
         self.SignUpPassword = tk.Entry(self, width=45, show="*")  # Hide the password initially
         self.SignUpPassword.place(x=800, y=500)
 
         # Hide/Show Password button
-        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_password)
+        self.show_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_password)
         self.show_password_button.place(x=1250, y=500)
 
-        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Times", 24, "bold")).place(x=800, y=600)
+        tk.Label(self, text="Confirm Password", fg="Black", bg="lightblue", font=("Ebrima", 24, "bold")).place(x=800, y=600)
         self.SignUpConfirmPassword = tk.Entry(self, width=45, show="*")  # Hide the confirm password initially
         self.SignUpConfirmPassword.place(x=800, y=700)
 
         # Hide/Show Confirm Password button
-        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Times", 18), command=self.toggle_confirm_password)
+        self.show_confirm_password_button = tk.Button(self, text="Show", fg="Black", bg="white", font=("Ebrima", 18), command=self.toggle_confirm_password)
         self.show_confirm_password_button.place(x=1250, y=700)
 
         # Sign-up button
@@ -247,7 +247,7 @@ class Homepage(tk.Frame):
 
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup1)
         self.createProjectButton.grid(row=1,column=2, padx=20, pady=20)
-        
+
     def filter_projects(self):
         # Get the text from the search bar
         search_query = self.search_entry.get().lower()
@@ -280,14 +280,14 @@ class Homepage(tk.Frame):
         Popup_Enter.pack(pady=5)
 
         # Button to create the project when clicked
-        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
+        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
 
         self.CreateProject.pack(pady=20)
 
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
         if project_name:
 
-            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"))
+            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"))
 
             max_y = 700
             x_offset = 270
@@ -335,7 +335,7 @@ class Project(tk.Frame):
         self.progress_bar.place(x=750, y=100)
 
         # Task creation area
-        self.create_task_button = tk.Button(self, text="Create New Task", fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"), command=self.popup_task)
+        self.create_task_button = tk.Button(self, text="Create New Task", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup_task)
         self.create_task_button.place(x=750, y=150)
 
         self.tasks = []  # List to store task checkboxes
@@ -355,7 +355,7 @@ class Project(tk.Frame):
         task_name_entry.pack(pady=5)
 
         # Button to create the task when clicked
-        create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window))
+        create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window))
         create_task_button.pack(pady=20)
 
     def create_new_task(self, task_name, popup_window):
