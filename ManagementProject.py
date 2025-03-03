@@ -317,7 +317,7 @@ class Homepage(tk.Frame):
 
 class Project(tk.Frame): 
     def __init__(self, parent, controller,*args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.controller = controller
         self.config(bg='Lightblue')
 
