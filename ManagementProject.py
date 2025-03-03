@@ -157,13 +157,10 @@ class SignUp(tk.Frame):
         mydb = client["Users"]
         mycol = mydb["UserInfo"]
             
-        cipher = self.controller.cipher
 
-        user = self.LoginBox.get()
-        Pwd = self.Pwd.get()
-        ConfPwd = self.ConfPass.get()
-        FName = self.FirstName.get()
-        LName=self.LastName.get()
+        user = self.SignUpEmail.get()
+        Pwd = self.SignUpPassword.get()
+        ConfPwd = self.SignUpConfirmPassword.get()
         EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
 
@@ -184,9 +181,8 @@ class SignUp(tk.Frame):
 
                         if contains_special_characters(Pwd):
 
-                            encrypted_password = cipher.encrypt(Pwd.encode())
 
-                            NewUser = [{"First Name":FName,"Last Name":LName,"Email": user, "Password": encrypted_password}]
+                            NewUser = [{"Email": user, "Password": Pwd}]
                             mycol.insert_many(NewUser)
                             messagebox.showinfo("Success","User Registered Successfully.")
                             self.AcceptClear()
@@ -210,15 +206,13 @@ class SignUp(tk.Frame):
 
 
     def AcceptClear(self):
-        self.Pwd.delete(0, tk.END)
-        self.ConfPass.delete(0, tk.END)
-        self.FirstName.delete(0, tk.END)
-        self.LastName.delete(0, tk.END)
-        self.LoginBox.delete(0, tk.END)
+        self.SignUpEmail(0, tk.END)
+        self.SignUpPassword(0, tk.END)
+        self.SignUpConfirmPassword(0, tk.END)
 
     def clear(self):
-        self.Pwd.delete(0, tk.END)
-        self.ConfPass.delete(0, tk.END)
+        self.SignUpEmail.delete(0, tk.END)
+        self.SignUpConfirmPassword.delete(0, tk.END)
 
 
 
