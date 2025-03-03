@@ -1,7 +1,7 @@
-#Added Login Page, Signup page and Partially the homepage its not the best but it works for now
-
 import tkinter as tk
 from tkinter import messagebox
+
+# ---------------------------- IMPORTANT CLASS -------------------------------
 
 class Navigating(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -9,7 +9,8 @@ class Navigating(tk.Tk):
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)        
+        self.wm_title("Management Application")
 
         self.frames = {}
 
@@ -25,6 +26,7 @@ class Navigating(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()  # Bring the frame to the top
 
+#---------------------------- IMPORTANT CLASS END ----------------------------
 
 # Validating the login details
 def validate_login(email_entry, password_entry, controller):
@@ -111,8 +113,6 @@ class SignUp(tk.Frame):
     def closing(self):
         exit()
 
-
-# Update validate_signup to correctly handle the entries
 def validate_signup(email, password, confirm_password, controller):
     if not email or not password or not confirm_password:
         messagebox.showerror("Sign Up Failed", "All fields are required.")
