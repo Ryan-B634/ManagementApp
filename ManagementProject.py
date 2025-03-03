@@ -231,7 +231,11 @@ class Homepage(tk.Frame):
 
         # Button to create the project when clicked
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window))
+=======
+        self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
+>>>>>>> Stashed changes
 =======
         self.CreateProject = tk.Button(popup_window, text="Create Project", bg='DeepskyBlue3', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_project(Popup_Enter.get(), popup_window,))
 >>>>>>> Stashed changes
@@ -272,11 +276,17 @@ class Homepage(tk.Frame):
             messagebox.showwarning("No Name", "You must provide a project name.")
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 class Project(tk.Frame): 
     def __init__(self, parent, controller, master=None, *args, **kwargs):
         tk.Frame.__init__(self, parent, master, *args, **kwargs)
         self.master = master
         self.controller = controller
+=======
+class Project(tk.Frame):
+    def __init__(self, parent, controller, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+>>>>>>> Stashed changes
 =======
 class Project(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
