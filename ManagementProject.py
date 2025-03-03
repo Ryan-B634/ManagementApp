@@ -42,10 +42,6 @@ def validate_login(email_entry, password_entry, controller):
     username = email_entry.get()
     password = password_entry.get()
 
-    # Example valid username and password (Needs to be replaced and linked to a database eventually)
-    valid_username = "admin"
-    valid_password = "admin"
-
     client = MongoClient("mongodb://localhost:27017")
     mydb = client["Users"]
     mycol = mydb["UserInfo"]
@@ -54,9 +50,10 @@ def validate_login(email_entry, password_entry, controller):
     CheckPass=mycol.find_one({"Password":password})
 
     if not CheckUser == None:
-        email_entry.delete(0, tk.END)
-        password_entry.delete(0, tk.END)
-        controller.show_frame(Homepage)  # Show homepage after successful login
+        if CheckPass == password:
+            email_entry.delete(0, tk.END)
+            password_entry.delete(0, tk.END)
+            controller.show_frame(Homepage)  # Show homepage after successful login
     else:
         messagebox.showerror("Login Failed", "Invalid username or password.")
 
