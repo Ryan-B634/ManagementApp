@@ -232,7 +232,6 @@ class Homepage(tk.Frame):
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0,column=2,padx=750)
         tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).grid(row=0,column=1)
 
-        self.projects = []  # List to store project buttons
         self.filtered_projects = self.projects
 
         # Search bar label and input field
@@ -275,8 +274,8 @@ class Homepage(tk.Frame):
     def popup1(self):
         # Creates a popup window for entering a new project name
         popup_window = tk.Toplevel()
-        popup_window.title("Create New Project")
-        popup_window.geometry("400x300")
+        popup_window.title("Project Management")
+        popup_window.geometry("400x400")
         popup_window.configure(bg='lightblue')
 
         tk.Label(popup_window, text="Enter Project Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
@@ -290,10 +289,18 @@ class Homepage(tk.Frame):
 
         self.CreateProject.pack(pady=20)
 
+        tk.Label(popup_window, text="Enter project Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+
+        delete_project_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        delete_project_entry.pack(pady=5)
+
+        delete_project_button = tk.Button(popup_window, text="Delete project", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_project(delete_project_entry.get(), popup_window))
+        delete_project_button.pack(pady=20)
+
     def create_new_project(self, project_name, popup_window): # The positioning is yet to be tested due to time constraints
         if project_name:
 
-            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"))
+            new_project_button = tk.Button(self, text=project_name, fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=lambda:self.controller.show_frame(Project))
 
             max_y = 700
             x_offset = 270
@@ -315,7 +322,7 @@ class Homepage(tk.Frame):
 
             new_project_button.place(x=x_position, y=y_position)
 
-            self.projects.append(new_project_button)  # Adds to the list of projects
+            self.projects.append((new_project_button, project_name))  # Adds to the list of projects
 
             popup_window.destroy()
 
@@ -323,6 +330,26 @@ class Homepage(tk.Frame):
         else:
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a project name.")
+
+    def delete_project(self, project_name, popup_window):
+        if project_name:
+            project_found = False
+            for new_project_button, stored_project_name in self.projects:
+                if stored_project_name == project_name:  # Compare the stored project name
+                    new_project_button.destroy()  # Remove the project from the UI
+                    self.projects.remove((new_project_button, stored_project_name))  # Remove it from the project list
+                    project_found = True
+                    break  # Exit the loop after finding the project
+
+            if project_found:
+                messagebox.showinfo("Success", f"Project '{project_name}' deleted successfully!")
+            else:
+                messagebox.showwarning("Not Found", f"Project '{project_name}' not found.")
+            popup_window.destroy()
+        else:
+            # In case the user didn't enter anything
+            messagebox.showwarning("No Name", "You must provide a project name to delete.")
+
 
 class Project(tk.Frame): 
     def __init__(self, parent, controller,*args, **kwargs):
@@ -347,11 +374,13 @@ class Project(tk.Frame):
         self.tasks = []  # List to store task checkboxes
         self.completed_tasks = 0  # Counter for completed tasks
 
+        self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 10, "bold"), command=lambda:controller.show_frame(Homepage)).place(x=0,y=0)
+
     def popup_task(self):
         # Creates a popup window for entering a new task name
         popup_window = tk.Toplevel()
-        popup_window.title("Create New Task")
-        popup_window.geometry("400x300")
+        popup_window.title("Task Management")
+        popup_window.geometry("400x400")
         popup_window.configure(bg='lightblue')
 
         tk.Label(popup_window, text="Enter Task Name:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
@@ -364,13 +393,20 @@ class Project(tk.Frame):
         create_task_button = tk.Button(popup_window, text="Create Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.create_new_task(task_name_entry.get(), popup_window))
         create_task_button.pack(pady=20)
 
+        tk.Label(popup_window, text="Enter Task Name to Delete:", bg='lightblue', fg='black', font=("Ebrima", 14)).pack(pady=10)
+
+        delete_name_entry = tk.Entry(popup_window, width=30, font=("Ebrima", 12, 'bold'))
+        delete_name_entry.pack(pady=5)
+
+        delete_task_button = tk.Button(popup_window, text="Delete Task", bg='DeepskyBlue1', fg='midnight blue', font=("Ebrima", 12), command=lambda: self.delete_task(delete_name_entry.get(), popup_window))
+        delete_task_button.pack(pady=20)
+
     def create_new_task(self, task_name, popup_window):
         if task_name:
-            # Create a new checkbox for the task
             task_var = tk.BooleanVar()  # A variable to track the checkbox state
 
             task_checkbox = tk.Checkbutton(self, text=task_name, var=task_var, font=("Ebrima", 18), bg="lightblue", command=lambda: self.update_progress(task_var))
-           
+
             # Resused method from homepage since it works.
             max_y = 500
             x_offset = 270
@@ -401,6 +437,25 @@ class Project(tk.Frame):
             # In case the user didn't enter anything
             messagebox.showwarning("No Name", "You must provide a task name.")
 
+    def delete_task(self, task_name, popup_window):
+        if task_name:
+            task_found = False
+            for task_checkbox, task_var in self.tasks:
+                if task_checkbox.cget('text') == task_name:
+                    task_checkbox.destroy()  # Remove the task from the UI
+                    self.tasks.remove((task_checkbox, task_var))  # Remove it from the task list
+                    task_found = True
+                    break  # Exit the loop after finding the task
+
+            if task_found:
+                messagebox.showinfo("Success", f"Task '{task_name}' deleted successfully!")
+            else:
+                messagebox.showwarning("Not Found", f"Task '{task_name}' not found.")
+            popup_window.destroy()
+        else:
+            # In case the user didn't enter anything
+            messagebox.showwarning("No Name", "You must provide a task name to delete.")
+
     def update_progress(self, task_var):
         # This updates the progress bar as tasks are completed
         if task_var.get():
@@ -414,11 +469,6 @@ class Project(tk.Frame):
 
         # Update the progress bar value
         self.progress_bar["value"] = progress_percentage
-
-        self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
-        self.TaskButton.place(x=270, y=150)
-
-
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
