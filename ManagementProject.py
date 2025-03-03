@@ -228,6 +228,9 @@ class Homepage(tk.Frame):
         self.controller = controller
         self.config(bg='Lightblue')
 
+        self.projects = []  
+        self.filtered_projects = []
+
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
 
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
