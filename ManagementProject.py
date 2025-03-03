@@ -103,6 +103,7 @@ class SignUp(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='Lightblue')
+        self.controller = controller
 
         # Sign-up labels and buttons
         tk.Label(self, text="Sign Up", fg="Black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=830, y=0)
@@ -133,7 +134,7 @@ class SignUp(tk.Frame):
         tk.Button(self, text="SignUp", fg="Black", bg="white", font=("Ebrima", 24),
                   command=self.addUser).place(x=885, y=900)
 
-
+        
     def toggle_password(self):
         """ Toggle password visibility for Sign Up """
         if self.SignUpPassword.cget('show') == "*":
@@ -152,19 +153,21 @@ class SignUp(tk.Frame):
             self.SignUpConfirmPassword.config(show="*")  # Hide the confirm password
             self.show_confirm_password_button.config(text="Show")  # Change button text to "Show"
 
+        
     def addUser(self):
         client = MongoClient("mongodb://localhost:27017")
         mydb = client["Users"]
         mycol = mydb["UserInfo"]
             
 
-        user = self.SignUpEmail.get()
-        Pwd = self.SignUpPassword.get()
-        ConfPwd = self.SignUpConfirmPassword.get()
+        self.User = self.SignUpEmail.get()
+        self.Pwd = self.SignUpPassword.get()
+        self.ConfPwd = self.SignUpConfirmPassword.get()
+        
         EmailRE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
 
-        Exist = mycol.find_one({"Email": user})
+        Exist = mycol.find_one({"Email": self.User})
 
         specialchar = re.compile("[$&+,:;=?@#|'<>.-^*()%!]")
 
@@ -173,19 +176,20 @@ class SignUp(tk.Frame):
 
         if Exist is None:
 
-            if EmailRE.match(user):
+            if EmailRE.match(self.User):
 
-                if Pwd == ConfPwd:
+                if self.Pwd == self.ConfPwd:
 
-                    if len(Pwd) >= 8:
+                    if len(self.Pwd) >= 8:
 
-                        if contains_special_characters(Pwd):
+                        if contains_special_characters(self.Pwd):
 
 
-                            NewUser = [{"Email": user, "Password": Pwd}]
+                            NewUser = [{"Email": self.User, "Password": self.Pwd}]
                             mycol.insert_many(NewUser)
                             messagebox.showinfo("Success","User Registered Successfully.")
                             self.AcceptClear()
+                            self.controller.show_frame(Login)
                         else:
                             messagebox.showerror("Error","Password Must Contain At Least one Special Character")
                             self.clear()
@@ -206,12 +210,11 @@ class SignUp(tk.Frame):
 
 
     def AcceptClear(self):
-        self.SignUpEmail(0, tk.END)
-        self.SignUpPassword(0, tk.END)
-        self.SignUpConfirmPassword(0, tk.END)
+        self.SignUpEmail.delete(0, tk.END)  
+        self.SignUpPassword.delete(0, tk.END)  
+        self.SignUpConfirmPassword.delete(0, tk.END) 
 
     def clear(self):
-        self.SignUpEmail.delete(0, tk.END)
         self.SignUpConfirmPassword.delete(0, tk.END)
         self.SignUpPassword.delete(0,tk.END)
 
