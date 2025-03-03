@@ -6,6 +6,7 @@
 
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import pymongo  # Database
 from pymongo import MongoClient # Database
 import re   # Regular Expression to validate email
@@ -209,6 +210,7 @@ class SignUp(tk.Frame):
     def clear(self):
         self.SignUpEmail.delete(0, tk.END)
         self.SignUpConfirmPassword.delete(0, tk.END)
+        self.SignUpPassword.delete(0,tk.END)
 
 
 
@@ -317,7 +319,7 @@ class Homepage(tk.Frame):
 
 class Project(tk.Frame): 
     def __init__(self, parent, controller,*args, **kwargs):
-        tk.Frame.__init__(self, parent, master, *args, **kwargs)
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         self.controller = controller
         self.config(bg='Lightblue')
 
@@ -340,7 +342,7 @@ class Project(tk.Frame):
 
     def popup_task(self):
         # Creates a popup window for entering a new task name
-        popup_window = tk.Toplevel(self.master)
+        popup_window = tk.Toplevel()
         popup_window.title("Create New Task")
         popup_window.geometry("400x300")
         popup_window.configure(bg='lightblue')
