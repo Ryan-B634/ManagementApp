@@ -5,6 +5,8 @@
 
 import tkinter as tk
 from tkinter import messagebox
+import pymongo
+from pymongo import MongoClient
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 
@@ -42,7 +44,14 @@ def validate_login(email_entry, password_entry, controller):
     valid_username = "admin"
     valid_password = "admin"
 
-    if username == valid_username and password == valid_password:
+    client = MongoClient("mongodb://localhost:27017")
+    mydb = client["Users"]
+    mycol = mydb["UserInfo"]
+
+    CheckUser=mycol.find_one({"Email":username})
+    CheckPass=mycol.find_one({"Password":password})
+
+    if not CheckUser == None:
         email_entry.delete(0, tk.END)
         password_entry.delete(0, tk.END)
         controller.show_frame(Homepage)  # Show homepage after successful login
