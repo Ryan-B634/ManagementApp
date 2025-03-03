@@ -223,10 +223,11 @@ class Homepage(tk.Frame):
         self.projects = []  
         self.filtered_projects = []
 
-        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
+        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).grid(row=0,column=2,padx=750)
+        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).grid(row=0,column=1)
 
-        tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=700, y=0)
-        tk.Button(self, text="Logout", fg="black", bg="white", font=("Ebrima", 12), command=lambda: controller.show_frame(Login)).place(x=0, y=0)
+        self.projects = []  # List to store project buttons
+        self.filtered_projects = self.projects
 
         # Search bar label and input field
         self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Ebrima", 18))
@@ -236,17 +237,17 @@ class Homepage(tk.Frame):
         self.search_entry.place(x=1400, y=50)
 
         # Search button
-        self.search_button = tk.Button(self, text="Search", fg="black", bg="white", font=("Ebrima", 18), command=self.filter_projects)
+        self.search_button = tk.Button(self, text="Search", fg="black", bg="DeepskyBlue1", font=("Ebrima", 12), command=self.filter_projects)
         self.search_button.place(x=1750, y=50)
 
         # Display the projects in a listbox (Isn't linked up with anything yet)
-        self.project_listbox = tk.Listbox(self, width=25, height=5, font=("Ebrima", 14)) 
+        self.project_listbox = tk.Listbox(self, width=41, height=5, font=("Ebrima", 14)) 
         self.project_listbox.place(x=1400, y=90)  # Position the list box just below the search bar
         self.update_project_listbox()
 
-        self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue3", font=("Ebrima", 24, "bold"), command=self.popup1)
-        self.createProjectButton.place(x=750, y=150)
-
+        self.createProjectButton = tk.Button(self, text="Create New Project", fg="black", bg="DeepskyBlue1", font=("Ebrima", 24, "bold"), command=self.popup1)
+        self.createProjectButton.grid(row=1,column=2, padx=20, pady=20)
+        
     def filter_projects(self):
         # Get the text from the search bar
         search_query = self.search_entry.get().lower()
