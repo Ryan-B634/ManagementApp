@@ -188,17 +188,56 @@ class Homepage(tk.Frame):
         self.master = master
         self.config(bg='Lightblue')
 
+        # Sample list of projects ( can be replaced  with actual data from a database when thats ready)
+        self.projects = ["Task 1"]
+        self.filtered_projects = self.projects  # Initially, all projects are shown
+
         tk.Label(self, text="Homepage", fg="black", bg="lightblue", font=("Ebrima", 48, "bold")).place(x=650, y=0)
 
+        # Search bar label and input field
+        self.search_label = tk.Label(self, text="Search Projects:", fg="black", bg="lightblue", font=("Times", 18))
+        self.search_label.place(x=1500, y=10)
+
+        self.search_entry = tk.Entry(self, width=30, font=("Times", 18))
+        self.search_entry.place(x=1400, y=50)
+
+        # Search button
+        self.search_button = tk.Button(self, text="Search", fg="black", bg="white", font=("Times", 18), command=self.filter_projects)
+        self.search_button.place(x=1750, y=50)
+
+        # Display the projects in a listbox (Isn't linked up with anything yet)
+        self.project_listbox = tk.Listbox(self, width=25, height=5, font=("Times", 14)) 
+        self.project_listbox.place(x=1400, y=90)  # Position the list box just below the search bar
+        self.update_project_listbox()
+
+        # Task Button (you can replace with actual functionality)
         self.TaskButton = tk.Button(self, text="Task 1", fg="black", bg="grey", font=("Ebrima", 24, "bold"))
         self.TaskButton.place(x=270, y=150)
-
 
         # Quit button
         tk.Button(self, text="QUIT", command=self.closing).place(x=0, y=0)
 
+    def filter_projects(self):
+        # Get the text from the search bar
+        search_query = self.search_entry.get().lower()
+
+        # Filter projects based on search query
+        self.filtered_projects = [project for project in self.projects if search_query in project.lower()]
+
+        # Update the project listbox with filtered results
+        self.update_project_listbox()
+
+    def update_project_listbox(self):
+        # Clear the current listbox content
+        self.project_listbox.delete(0, tk.END)
+
+        # Insert the filtered projects into the listbox
+        for project in self.filtered_projects:
+            self.project_listbox.insert(tk.END, project)
+
     def closing(self):
         exit()
+
 
 # ---------------------------- IMPORTANT AREA -------------------------------
 root = Navigating()
