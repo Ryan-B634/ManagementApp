@@ -260,32 +260,43 @@ class Homepage(tk.Frame):
         self.projects = []  
         self.filtered_projects = self.projects
 
+       
         # Search bar and button
         self.search_entry = tk.Entry(self, width=20, font=("Ebrima", 18))
         self.canvas.create_window(1675, 30, window=self.search_entry)
         self.search_button = tk.Button(self, text="Search", fg="white", bg="midnightblue", font=("Ebrima", 18), command=self.filter_projects)
         self.canvas.create_window(1870, 30, window=self.search_button)
 
-        # Project listbox
+        # Project Listbox
         self.project_listbox = tk.Listbox(self, width=35, height=10, font=("Ebrima", 14))
         self.canvas.create_window(1725, 200, window=self.project_listbox)
         self.update_project_listbox()
+
+        # Bind selection event
+        self.project_listbox.bind("<<ListboxSelect>>", self.on_select)
 
         # Create project button
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="white", bg="midnightblue", font=("Ebrima", 18, "bold"), command=self.popup1)
         self.canvas.create_window(960, 150, window=self.createProjectButton)
 
+    def on_select(self, event):
+        """Open the selected project when clicked."""
+        selected_index = self.project_listbox.curselection()
+        if selected_index:
+            selected_project = self.project_listbox.get(selected_index[0])  
+            print(f"Selected Project: {selected_project}")  
+            self.controller.show_frame(Project)  # Open project page
+
     def update_project_listbox(self):
+        """Update the project list based on search results."""
         self.project_listbox.delete(0, tk.END)
         for project in self.filtered_projects:
             self.project_listbox.insert(tk.END, project)
 
     def filter_projects(self):
+        """Filter the project list based on search input."""
         search_term = self.search_entry.get().lower()
-        if not self.projects:
-            self.filtered_projects = []
-        else:
-            self.filtered_projects = [p for p in self.projects if search_term in p.lower()]
+        self.filtered_projects = [p for p in self.projects if search_term in p.lower()]
         self.update_project_listbox()
 
 
