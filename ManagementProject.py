@@ -271,9 +271,20 @@ class Homepage(tk.Frame):
         self.canvas.create_window(1725, 200, window=self.project_listbox)
         self.update_project_listbox()
 
+
+        self.project_listbox.bind("<<ListboxSelect>>", self.on_select)
+
         # Create project button
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="white", bg="midnightblue", font=("Ebrima", 18, "bold"), command=self.popup1)
         self.canvas.create_window(960, 150, window=self.createProjectButton)
+
+    def on_select(self, event):
+
+        selected_index = self.project_listbox.curselection()
+        if selected_index:
+            selected_project = self.project_listbox.get(selected_index[0])  
+            print(f"Selected Project: {selected_project}")  
+            self.controller.show_frame(Project)  
 
     def update_project_listbox(self):
         self.project_listbox.delete(0, tk.END)
