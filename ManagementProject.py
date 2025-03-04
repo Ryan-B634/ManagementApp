@@ -15,7 +15,7 @@ class Navigating(tk.Tk):
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        self.wm_title("Management Application")
+        self.wm_title("SysManage")
 
         self.frames = {}
 
@@ -90,7 +90,7 @@ class Login(tk.Frame):
         self.canvas.pack(fill="both", expand=True)
 
         # Add the title text to the canvas
-        self.canvas.create_text(960, 50, text="Management Application", fill="White", font=("Ebrima", 48, "bold"), anchor="center")
+        self.canvas.create_text(960, 50, text="SysManage", fill="White", font=("Ebrima", 48, "bold"), anchor="center")
         
         # Labels as text on the canvas
         self.canvas.create_text(725, 300, text="Enter Email:", fill="White", font=("Ebrima", 24, "bold"))
@@ -734,7 +734,7 @@ class Project(tk.Frame):
 
 # ---------------------------- MAIN APPLICATION -------------------------------
 root = Navigating()
-root.wm_title("Management System")
+root.wm_title("SysManage")
 root.state("zoomed")
 root.geometry("1920x1080")
 root.mainloop()
