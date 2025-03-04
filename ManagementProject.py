@@ -25,12 +25,35 @@ class Navigating(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         # For testing, show Project page (change as needed)
-        self.show_frame(Homepage)
+        self.show_frame(Login)
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()  # Bring the frame to the top
 #---------------------------- IMPORTANT CLASS END ----------------------------
+class Tooltip:
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip_window = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+
+    def show_tooltip(self, event):
+        # Create a new window for the tooltip
+        self.tooltip_window = tk.Toplevel(self.widget)
+        self.tooltip_window.wm_overrideredirect(True)  # Removes window decorations
+        self.tooltip_window.wm_geometry(f"+{event.x_root + 10}+{event.y_root + 10}")
+
+        # Tooltip content (task data)
+        label = tk.Label(self.tooltip_window, text=self.text, font=("Ebrima", 10), bg="lightyellow", bd=1, relief="solid")
+        label.pack()
+
+    def hide_tooltip(self, event):
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+
+
 
 def validate_login(email_entry, password_entry, controller):
     username = email_entry.get()
@@ -387,7 +410,7 @@ class Project(tk.Frame):
 
         # Home Button
         self.homeButton = tk.Button(self, text="Home", fg="gold", bg="red4", font=("Ebrima", 14, "bold"), command=lambda: controller.show_frame(Homepage))
-        self.canvas.create_window(100, 50, window=self.homeButton)
+        self.canvas.create_window(37, 24, window=self.homeButton)
 
         self.tasks = []
 
@@ -493,6 +516,11 @@ class Project(tk.Frame):
             # Display the task dates
             dates_label = tk.Label(task_item_frame, text=f"{start_date} to {end_date}", font=("Ebrima", 10), bg="white")
             dates_label.pack(side="left", padx=5)
+
+            tooltip_text = f"Title: {title}\nDescription: {description}\nAssignee: {assignee}\nProject: {project}\nStart Date: {start_date}\nEnd Date: {end_date}\nPriority: {priority}\nStatus: {status}"
+
+            # Attach the tooltip to the task item frame
+            Tooltip(task_item_frame, tooltip_text)
 
             # Store task data in a list
             self.tasks.append({"frame": task_item_frame, "var": task_var, "checkbox": task_checkbox})
