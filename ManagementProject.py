@@ -121,10 +121,10 @@ class Login(tk.Frame):
     def toggle_password(self):
         if self.LoginPassword.cget('show') == "*":
             self.LoginPassword.config(show="")
-            self.show_password_button.config(text="Hide")
+            self.show_password_button.config(text="👁")
         else:
             self.LoginPassword.config(show="*")
-            self.show_password_button.config(text="Show")
+            self.show_password_button.config(text="👁")
 
 # ---------------------------- SIGN UP PAGE ----------------------------
 class SignUp(tk.Frame):
@@ -173,18 +173,18 @@ class SignUp(tk.Frame):
     def toggle_password(self):
         if self.SignUpPassword.cget('show') == "*":
             self.SignUpPassword.config(show="")
-            self.show_password_button.config(text="Hide")
+            self.show_password_button.config(text="👁")
         else:
             self.SignUpPassword.config(show="*")
-            self.show_password_button.config(text="Show")
+            self.show_password_button.config(text="👁")
 
     def toggle_confirm_password(self):
         if self.SignUpConfirmPassword.cget('show') == "*":
             self.SignUpConfirmPassword.config(show="")
-            self.show_confirm_password_button.config(text="Hide")
+            self.show_confirm_password_button.config(text="👁")
         else:
             self.SignUpConfirmPassword.config(show="*")
-            self.show_confirm_password_button.config(text="Show")
+            self.show_confirm_password_button.config(text="👁")
     def addUser(self):
         client = MongoClient("mongodb://localhost:27017")
         mydb = client["Users"]
