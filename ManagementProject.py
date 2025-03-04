@@ -4,8 +4,8 @@ import pymongo  # Database
 from pymongo import MongoClient  # Database
 import re   # Regular Expression to validate email
 import tkcalendar  # For task and project deadlines
-from tkcalendar import Calendar
-from PIL import Image, ImageTk
+from tkcalendar import Calendar # For date picking in task management
+from PIL import Image, ImageTk # For backgrounds of popups and frames.
 
 # ---------------------------- IMPORTANT CLASS -------------------------------
 class Navigating(tk.Tk):
@@ -30,7 +30,10 @@ class Navigating(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()  # Bring the frame to the top
+
 #---------------------------- IMPORTANT CLASS END ----------------------------
+
+#---------------------------- TOOLTIP CLASS FOR TASKS ----------------------------
 class Tooltip:
     def __init__(self, widget, text):
         self.widget = widget
@@ -52,8 +55,6 @@ class Tooltip:
     def hide_tooltip(self, event):
         if self.tooltip_window:
             self.tooltip_window.destroy()
-
-
 
 def validate_login(email_entry, password_entry, controller):
     username = email_entry.get()
@@ -379,7 +380,6 @@ class Homepage(tk.Frame):
             popup_window.destroy()
         else:
             messagebox.showwarning("No Name", "You must provide a project name to delete.")
-
 
 # ---------------------------- PROJECT PAGE (Task Management) ----------------------------
 class Project(tk.Frame):
@@ -731,8 +731,6 @@ class Project(tk.Frame):
             messagebox.showinfo("Success", f"Task '{title}' is the new name of '{first_title}'!")
         else:
             messagebox.showwarning("No Title", "You must provide a task title.")
-
-
 
 # ---------------------------- MAIN APPLICATION -------------------------------
 root = Navigating()
