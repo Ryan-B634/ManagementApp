@@ -1,0 +1,9 @@
+babel==2.17.0
+cffi==1.17.1
+dnspython==2.7.0
+fernet==1.0.1
+pillow==11.1.0
+pyaes==1.6.1
+pycparser==2.22
+pymongo==4.11.1
+tkcalendar==1.6.1

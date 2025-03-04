@@ -130,6 +130,7 @@ class Login(tk.Frame):
 class SignUp(tk.Frame):
     def __init__(self, parent, controller, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.controller = controller # Needed in order to automatically redirect user to login page after successful signup
 
         # Load background image
         self.bg_image = Image.open("tkinterbackground.jpg")
@@ -203,7 +204,7 @@ class SignUp(tk.Frame):
                 if self.Pwd == self.ConfPwd:
                     if len(self.Pwd) >= 8:
                         if contains_special_characters(self.Pwd):
-                            NewUser = [{"Email": self.User, "Password": self.Pwd}]
+                            NewUser = [{"Email": self.User, "Password": self.Pwd,"Admin":"No"}]
                             mycol.insert_many(NewUser)
                             messagebox.showinfo("Success", "User Registered Successfully.")
                             self.AcceptClear()
