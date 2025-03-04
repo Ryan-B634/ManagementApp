@@ -25,7 +25,7 @@ class Navigating(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         # For testing, show Project page (change as needed)
-        self.show_frame(Login)
+        self.show_frame(Project)
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
@@ -121,10 +121,10 @@ class Login(tk.Frame):
     def toggle_password(self):
         if self.LoginPassword.cget('show') == "*":
             self.LoginPassword.config(show="")
-            self.show_password_button.config(text="Hide")
+            self.show_password_button.config(text="👁")
         else:
             self.LoginPassword.config(show="*")
-            self.show_password_button.config(text="Show")
+            self.show_password_button.config(text="👁")
 
 # ---------------------------- SIGN UP PAGE ----------------------------
 class SignUp(tk.Frame):
@@ -173,18 +173,18 @@ class SignUp(tk.Frame):
     def toggle_password(self):
         if self.SignUpPassword.cget('show') == "*":
             self.SignUpPassword.config(show="")
-            self.show_password_button.config(text="Hide")
+            self.show_password_button.config(text="👁")
         else:
             self.SignUpPassword.config(show="*")
-            self.show_password_button.config(text="Show")
+            self.show_password_button.config(text="👁")
 
     def toggle_confirm_password(self):
         if self.SignUpConfirmPassword.cget('show') == "*":
             self.SignUpConfirmPassword.config(show="")
-            self.show_confirm_password_button.config(text="Hide")
+            self.show_confirm_password_button.config(text="👁")
         else:
             self.SignUpConfirmPassword.config(show="*")
-            self.show_confirm_password_button.config(text="Show")
+            self.show_confirm_password_button.config(text="👁")
     def addUser(self):
         client = MongoClient("mongodb://localhost:27017")
         mydb = client["Users"]
@@ -407,7 +407,10 @@ class Project(tk.Frame):
 
         # "Add Task" Button
         self.create_task_button = tk.Button(self, text="Add Task", fg="white", bg="midnightblue", font=("Ebrima", 24, "bold"), command=self.popup_task)
-        self.canvas.create_window(960, 250, window=self.create_task_button)
+        self.canvas.create_window(800, 250, window=self.create_task_button)
+
+        self.delete_task_button = tk.Button(self, text="Delete Task", fg="white", bg="midnightblue", font=("Ebrima", 24, "bold"), command=self.popup_delete)
+        self.canvas.create_window(1100, 250, window=self.delete_task_button)
 
         # Scrollable task area
         self.task_canvas = tk.Canvas(self, bg="midnightblue", width=800, height=400)
@@ -425,8 +428,6 @@ class Project(tk.Frame):
         self.canvas.create_window(37, 24, window=self.homeButton)
 
         self.tasks = []
-
-
 
     def popup_task(self):
         popup_window = tk.Toplevel()
@@ -500,6 +501,35 @@ class Project(tk.Frame):
         ))
         canvas.create_window(400, 670, window=assign_button)
 
+    def popup_delete(self):
+        delete_window = tk.Toplevel()
+        delete_window.title("Delete a Task")
+        delete_window.geometry("600x400")
+
+        # Load background image
+        bg_image = Image.open("tkinterbackground.jpg")
+        bg_image = bg_image.resize((600, 400))  # Adjust size if needed
+        bg_photo = ImageTk.PhotoImage(bg_image)
+
+        # Create a canvas and set the image
+        canvas = tk.Canvas(delete_window, width=600, height=400)
+        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+        canvas.pack(fill="both", expand=True)
+        delete_window.bg_photo = bg_photo  # Keep reference to avoid garbage collection
+
+        # Title
+        canvas.create_text(300, 40, text="Delete a Task", fill="White", font=("Ebrima", 20, "bold"))
+
+        # Create project section
+        canvas.create_text(300, 100, text="Enter task Name:", fill="White", font=("Ebrima", 14))
+        Delete_Enter = tk.Entry(delete_window, width=30, font=("Ebrima", 12, 'bold'))
+        create_project_button = tk.Button(delete_window, text="Delete Task", bg='midnightblue', fg='white', font=("Ebrima", 12), command=lambda: self.delete_task(Delete_Enter.get(), delete_window))
+        
+        canvas.create_window(300, 130, window=Delete_Enter)
+        canvas.create_window(300, 170, window=create_project_button)
+
+
+
     def create_new_task(self, title, description, assignee, project, start_date, end_date, priority, status, popup_window):
         if title:
             task_data = { # For MongoDB
@@ -550,7 +580,6 @@ class Project(tk.Frame):
                 if task["checkbox"].cget('text') == title:
                     task["frame"].destroy()
                     self.tasks.remove(task)
-                    self.tasks_collection.delete_one({"title": title})
                     task_found = True
                     break
             if task_found:
