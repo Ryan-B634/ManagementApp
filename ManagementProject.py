@@ -7,6 +7,12 @@ import tkcalendar  # For task and project deadlines
 from tkcalendar import Calendar
 from PIL import Image, ImageTk
 
+client = MongoClient("mongodb://localhost:27017/")
+db = client["Users"]
+mycol = db['UserInfo']
+projects_collection = db["projects"]
+tasks_collection = db["tasks"]
+
 # ---------------------------- IMPORTANT CLASS -------------------------------
 class Navigating(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -59,9 +65,6 @@ def validate_login(email_entry, password_entry, controller):
     username = email_entry.get()
     password = password_entry.get()
 
-    client = MongoClient("mongodb://localhost:27017")
-    mydb = client["Users"]
-    mycol = mydb["UserInfo"]
 
     user = mycol.find_one({"Email": username, "Password": password})
 
@@ -279,6 +282,20 @@ class Homepage(tk.Frame):
         self.createProjectButton = tk.Button(self, text="Create New Project", fg="white", bg="midnightblue", font=("Ebrima", 18, "bold"), command=self.popup1)
         self.canvas.create_window(960, 150, window=self.createProjectButton)
 
+
+    def get_projects_from_db(self):
+        """Fetch the projects from MongoDB."""
+        projects_cursor = projects_collection.find() 
+        projects = list(projects_cursor)  
+        return projects
+
+    def save_project_to_db(self, project):
+        """Save the new project to MongoDB."""
+        # Insert the new project into the MongoDB collection
+        projects_collection.insert_one(project)
+        print(f"Project '{project['name']}' saved to database.")
+    
+
     def on_select(self, event):
         """Open the selected project when clicked."""
         selected_index = self.project_listbox.curselection()
@@ -288,15 +305,19 @@ class Homepage(tk.Frame):
             self.controller.show_frame(Project)  # Open project page
 
     def update_project_listbox(self):
-        """Update the project list based on search results."""
+        """Update the project list based on search results from MongoDB."""
         self.project_listbox.delete(0, tk.END)
-        for project in self.filtered_projects:
-            self.project_listbox.insert(tk.END, project)
+        # Retrieve projects from MongoDB
+        projects = self.get_projects_from_db()
+        self.projects = projects  
+        for project in self.projects:
+            self.project_listbox.insert(tk.END, project['name'])
 
     def filter_projects(self):
         """Filter the project list based on search input."""
         search_term = self.search_entry.get().lower()
-        self.filtered_projects = [p for p in self.projects if search_term in p.lower()]
+        filtered_projects = [p for p in self.projects if search_term in p['name'].lower()]
+        self.filtered_projects = filtered_projects
         self.update_project_listbox()
 
 
@@ -339,6 +360,13 @@ class Homepage(tk.Frame):
 
     def create_new_project(self, project_name, popup_window):
         if project_name:
+            new_project = {
+                "name": project_name
+            }
+            # Store the project in MongoDB
+            self.save_project_to_db(new_project)
+
+            # Create a new frame inside the project area for this project
             new_project_button = tk.Button(self, text=project_name, fg="white", bg="midnightblue", font=("Ebrima", 20, "bold"), command=lambda: self.controller.show_frame(Project)) 
 
             max_y = 700
@@ -357,8 +385,6 @@ class Homepage(tk.Frame):
                 y_position = y_offset + len(self.projects) * button_spacing_y
 
             new_project_button.place(x=x_position, y=y_position)
-
-            self.projects.append(project_name)
             popup_window.destroy()
             messagebox.showinfo("Success", f"Project '{project_name}' created successfully!")
         else:
@@ -367,15 +393,16 @@ class Homepage(tk.Frame):
 
     def delete_project(self, project_name, popup_window):
         if project_name:
-            if project_name in self.projects:
-                self.projects.remove(project_name)
-                for widget in self.winfo_children():
-                    if isinstance(widget, tk.Button) and widget.cget("text") == project_name:
-                        widget.destroy()
-                        break
-                messagebox.showinfo("Success", f"Project '{project_name}' deleted successfully!")
-            else:
-                messagebox.showwarning("Not Found", f"Project '{project_name}' not found.")
+            # Delete project from MongoDB
+            self.delete_project_from_db(project_name)
+            
+            # Remove project button
+            for widget in self.winfo_children():
+                if isinstance(widget, tk.Button) and widget.cget("text") == project_name:
+                    widget.destroy()
+                    break
+            
+            messagebox.showinfo("Success", f"Project '{project_name}' deleted successfully!")
             popup_window.destroy()
         else:
             messagebox.showwarning("No Name", "You must provide a project name to delete.")
@@ -542,12 +569,14 @@ class Project(tk.Frame):
                 "priority": priority,
                 "status": status
             }
-            # Create a new frame inside the scrollable task area for this task
+            # Save task to MongoDB
+            self.save_task_to_db(task_data)
+
+            # Create a new frame inside the task area for this task
             task_item_frame = tk.Frame(self.task_frame, bg="white", bd=1, relief="solid")
             task_item_frame.pack(fill="x", pady=2, padx=2)
 
             task_var = tk.BooleanVar()  # Created a BooleanVar for the task completion
-
 
             task_checkbox = tk.Checkbutton(
                 task_item_frame, text=title, variable=task_var, font=("Ebrima", 14),
@@ -567,14 +596,11 @@ class Project(tk.Frame):
             # Store task data in a list
             self.tasks.append({"frame": task_item_frame, "var": task_var, "checkbox": task_checkbox})
 
-            task_edit_button = tk.Button(task_item_frame, text="Edit", fg="white", bg="midnightblue", font=("Ebrima", 12, "bold"), command=lambda: self.popup_edit(title))
-            task_edit_button.pack(side="right", padx=5)
-
             popup_window.destroy()
             messagebox.showinfo("Success", f"Task '{title}' created successfully!")
-
         else:
             messagebox.showwarning("No Title", "You must provide a task title.")
+
 
     def delete_task(self, title, popup_window):
         if title:
@@ -593,144 +619,12 @@ class Project(tk.Frame):
         else:
             messagebox.showwarning("No Title", "You must provide a task title to delete.")
 
+
     def update_progress(self):
         completed = sum(1 for task in self.tasks if task["var"].get())  # Count checked tasks
         total = len(self.tasks)
         progress_percentage = (completed / total * 100) if total > 0 else 0
         self.progress_bar["value"] = progress_percentage
-
-    def popup_edit(self, task):
-        # Create the edit window (popup)
-        edit_window = tk.Toplevel()
-        edit_window.title("Edit Task")
-        edit_window.geometry("800x750")
-
-        # Load and set background image for the popup
-        bg_image = Image.open("tkinterbackground.jpg")
-        bg_image = bg_image.resize((800, 750))
-        bg_photo = ImageTk.PhotoImage(bg_image)
-        
-        canvas = tk.Canvas(edit_window, width=800, height=750)
-        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
-        canvas.pack(fill="both", expand=True)
-        edit_window.bg_photo = bg_photo
-
-        canvas.create_text(400, 10, text="Task you wish to edit:", fill="white", font=("Ebrima", 14))
-        first_title_entry = tk.Entry(edit_window, width=40, font=("Ebrima", 12, 'bold'))  
-        canvas.create_window(400, 30, window=first_title_entry)
-
-        # Task Title
-        canvas.create_text(400, 50, text="Task Title:", fill="white", font=("Ebrima", 14))
-        task_title_entry = tk.Entry(edit_window, width=40, font=("Ebrima", 12, 'bold'))  
-        canvas.create_window(400, 80, window=task_title_entry)
-
-        # Task Description
-        canvas.create_text(400, 130, text="Task Description:", fill="white", font=("Ebrima", 14))
-        task_description_entry = tk.Entry(edit_window, width=40, font=("Ebrima", 12, 'bold'))
-        canvas.create_window(400, 160, window=task_description_entry)
-
-        # Assign to Team Member
-        canvas.create_text(400, 200, text="Assign to Team Member:", fill="white", font=("Ebrima", 14))
-        team_members = ["Alice", "Bob", "Charlie"]  # Example team members
-        assignee_combobox = ttk.Combobox(edit_window, font=("Ebrima", 12), values=team_members)
-        canvas.create_window(400, 230, window=assignee_combobox)
-
-        # Assign to Project
-        canvas.create_text(400, 270, text="Assign to Project:", fill="white", font=("Ebrima", 14))
-        project_combobox = ttk.Combobox(edit_window, font=("Ebrima", 12), values=["No projects available"])
-        canvas.create_window(400, 300, window=project_combobox)
-
-        # Start Date
-        canvas.create_text(215, 325, text="Start Date:", fill="white", font=("Ebrima", 14))
-        start_date_calendar = Calendar(edit_window, selectmode='day')
-        canvas.create_window(200, 430, window=start_date_calendar)
-
-        # End Date
-        canvas.create_text(605, 325, text="End Date:", fill="white", font=("Ebrima", 14))
-        end_date_calendar = Calendar(edit_window, selectmode='day')
-        canvas.create_window(600, 430, window=end_date_calendar)
-
-        # Priority Level
-        canvas.create_text(400, 530, text="Priority Level:", fill="white", font=("Ebrima", 14))
-        priority_combobox = ttk.Combobox(edit_window, values=["Low", "Medium", "High"], font=("Ebrima", 12))
-        canvas.create_window(400, 560, window=priority_combobox)
-
-        # Completion Status
-        canvas.create_text(400, 600, text="Completion Status:", fill="white", font=("Ebrima", 14))
-        status_combobox = ttk.Combobox(edit_window, values=["In-Progress", "Completed"], font=("Ebrima", 12))
-        canvas.create_window(400, 630, window=status_combobox)
-
-        # Save changes button
-        save_button = tk.Button(edit_window, text="Save Changes", bg='gold', fg='black', font=("Ebrima", 12, 'bold'),
-                                command=lambda: self.save_task_changes(task, first_title_entry.get(), task_title_entry.get(), task_description_entry.get(),
-                                                                        assignee_combobox.get(), project_combobox.get(),
-                                                                        start_date_calendar.get_date(), end_date_calendar.get_date(),
-                                                                        priority_combobox.get(), status_combobox.get(), edit_window))
-        canvas.create_window(400, 670, window=save_button)
-
-
-    def save_task_changes(self, task, first_title, title, description, assignee, project, start_date, end_date, priority, status, edit_window):
-        if title:
-            task_found = False
-            # Deleting the old task
-            for existing_task in self.tasks:
-                if existing_task["checkbox"].cget('text') == first_title:  # Compare with the initial title
-                    existing_task["frame"].destroy()
-                    self.tasks.remove(existing_task)
-                    task_found = True
-                    break
-
-            if task_found:
-                messagebox.showinfo("Success", f"Task '{first_title}' changed successfully!")
-            else:
-                messagebox.showwarning("Not Found", f"Task '{first_title}' not found.")
-        else:
-            messagebox.showwarning("No Title", "You must provide a task title to delete.")
-
-        if title:  # If title is provided, save the new task
-            task_data = {  # For MongoDB
-                "title": title,
-                "description": description,
-                "assignee": assignee,
-                "project": project,
-                "start_date": start_date,
-                "end_date": end_date,
-                "priority": priority,
-                "status": status
-            }
-
-            # Create a new frame inside the scrollable task area for this task
-            task_item_frame = tk.Frame(self.task_frame, bg="white", bd=1, relief="solid")
-            task_item_frame.pack(fill="x", pady=2, padx=2)
-
-            task_var = tk.BooleanVar()  # Created a BooleanVar for the task completion
-
-            task_checkbox = tk.Checkbutton(
-                task_item_frame, text=title, variable=task_var, font=("Ebrima", 14),
-                bg="white", command=self.update_progress  # Ensure this updates progress
-            )
-            task_checkbox.pack(side="left", padx=5)
-
-            # Display the task dates
-            dates_label = tk.Label(task_item_frame, text=f"{start_date} to {end_date}", font=("Ebrima", 10), bg="white")
-            dates_label.pack(side="left", padx=5)
-
-            tooltip_text = f"Title: {title}\nDescription: {description}\nAssignee: {assignee}\nProject: {project}\nStart Date: {start_date}\nEnd Date: {end_date}\nPriority: {priority}\nStatus: {status}"
-
-            # Attach the tooltip to the task item frame
-            Tooltip(task_item_frame, tooltip_text)
-
-            # Store task data in a list
-            self.tasks.append({"frame": task_item_frame, "var": task_var, "checkbox": task_checkbox})
-
-            # Add an edit button to the task frame
-            task_edit_button = tk.Button(task_item_frame, text="Edit", fg="white", bg="midnightblue", font=("Ebrima", 12, "bold"), command=lambda: self.popup_edit(title))
-            task_edit_button.pack(side="right", padx=5)
-
-            edit_window.destroy()
-            messagebox.showinfo("Success", f"Task '{title}' is the new name of '{first_title}'!")
-        else:
-            messagebox.showwarning("No Title", "You must provide a task title.")
 
 
 
